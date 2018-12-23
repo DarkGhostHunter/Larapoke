@@ -32,12 +32,18 @@ class LarapokeMiddleware
     {
         $mode = app('config')->get('larapoke.mode');
 
+        // Disable any injection if we are using blade templates
         if ($mode !== 'blade') {
+
+            // On Auto or manual middleware using detection, check if there is a
+            // form to keep alive. Otherwise we will inject the script inside
+            // the Response as long the detection flag was not passed down.
             if ($mode === 'auto' || $detect === 'detect') {
-                if ($this->hasCsrf($response)) $this->setScriptInContent($response);
+                $this->hasCsrf($response) ?: $this->setScriptInContent($response);
             } elseif ($detect !== 'detect') {
                 $this->setScriptInContent($response);
             }
+
         }
 
         return $response;

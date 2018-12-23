@@ -10,13 +10,11 @@
          stopOnFailure="false"
          verbose="true"
 >
-
     <testsuites>
         <testsuite name="Larapoke Test Suite">
             <directory suffix="Test.php">tests/</directory>
         </testsuite>
     </testsuites>
-
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="false">
             <directory suffix=".php">src/</directory>
@@ -26,4 +24,7 @@
         <env name="APP_ENV" value="testing"/>
         <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
     </php>
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
 </phpunit>

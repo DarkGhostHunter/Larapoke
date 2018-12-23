@@ -3,7 +3,7 @@ Yerlin Matu - Unslash (UL) #GtwiBmtJvaU](https://images.unsplash.com/photo-15133
 
 [![Latest Stable Version](https://poser.pugx.org/darkghosthunter/larapoke/v/stable)](https://packagist.org/packages/darkghosthunter/larapoke) [![License](https://poser.pugx.org/darkghosthunter/larapoke/license)](https://packagist.org/packages/darkghosthunter/larapoke)
 ![](https://img.shields.io/packagist/php-v/darkghosthunter/larapoke.svg)
- [![Build Status](https://travis-ci.com/DarkGhostHunter/Larapoke.svg?branch=master)](https://travis-ci.com/DarkGhostHunter/Larapoke) [![Coverage Status](https://coveralls.io/repos/github/DarkGhostHunter/Larapoke/badge.svg?branch=master)](https://coveralls.io/github/DarkGhostHunter/Larapoke?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/5c93490206b5d426c842/maintainability)](https://codeclimate.com/github/DarkGhostHunter/Larapoke/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/5c93490206b5d426c842/test_coverage)](https://codeclimate.com/github/DarkGhostHunter/Larapoke/test_coverage)
+ [![Build Status](https://travis-ci.com/DarkGhostHunter/Larapoke.svg?branch=master)](https://travis-ci.com/DarkGhostHunter/Larapoke) [![Coverage Status](https://coveralls.io/repos/github/DarkGhostHunter/Larapoke/badge.svg?branch=master)](https://coveralls.io/github/DarkGhostHunter/Larapoke?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/d755d23efe1f1835761e/maintainability)](https://codeclimate.com/github/DarkGhostHunter/Larapoke/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/d755d23efe1f1835761e/test_coverage)](https://codeclimate.com/github/DarkGhostHunter/Larapoke/test_coverage)
 
 # Larapoke
 

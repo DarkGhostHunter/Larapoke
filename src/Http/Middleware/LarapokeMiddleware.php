@@ -39,11 +39,12 @@ class LarapokeMiddleware
             // form to keep alive. Otherwise we will inject the script inside
             // the Response as long the detection flag was not passed down.
             if ($mode === 'auto' || $detect === 'detect') {
-                $this->hasCsrf($response) ?: $this->setScriptInContent($response);
+                if ($this->hasCsrf($response)) {
+                    $this->setScriptInContent($response);
+                }
             } elseif ($detect !== 'detect') {
                 $this->setScriptInContent($response);
             }
-
         }
 
         return $response;

@@ -18,8 +18,18 @@ class LarapokeMiddleware
      */
     public function handle($request, Closure $next, $detect = null)
     {
-        $response = $next($request);
+        return $this->shouldInjectScript($next($request), $detect);
+    }
 
+    /**
+     * Should inject the script into the response.
+     *
+     * @param $response
+     * @param string|null $detect
+     * @return \Illuminate\Http\Response
+     */
+    public function shouldInjectScript($response, $detect)
+    {
         $mode = app('config')->get('larapoke.mode');
 
         if ($mode !== 'blade') {

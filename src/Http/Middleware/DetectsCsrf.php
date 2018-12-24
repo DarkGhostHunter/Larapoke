@@ -14,7 +14,9 @@ trait DetectsCsrf
      */
     protected function hasCsrf(Response $response)
     {
-        if ($response->isOk()) {
+        $isHtml = strpos($response->headers->get('content-type'), 'text/html') !== false;
+
+        if ($response->isOk() && $isHtml) {
 
             $content = $response->content();
 
@@ -23,6 +25,7 @@ trait DetectsCsrf
 
             return $hasCsrfHeader || $hasCsrfInput;
         }
+
         return false;
     }
 }

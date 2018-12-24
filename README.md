@@ -1,5 +1,5 @@
 ![
-Yerlin Matu - Unslash (UL) #GtwiBmtJvaU](https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1280&h=400&q=80)
+Paul Hanaoka - Unslash (UL) #C0zDWAPFT9A](https://images.unsplash.com/photo-1496284427489-f59461d8a8e6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1280&h=400&q=80)
 
 [![Latest Stable Version](https://poser.pugx.org/darkghosthunter/larapoke/v/stable)](https://packagist.org/packages/darkghosthunter/larapoke) [![License](https://poser.pugx.org/darkghosthunter/larapoke/license)](https://packagist.org/packages/darkghosthunter/larapoke)
 ![](https://img.shields.io/packagist/php-v/darkghosthunter/larapoke.svg)
@@ -24,7 +24,9 @@ composer require darkghosthunter/larapoke
 
 ## How does it work?
 
-Larapoke pokes your App with a HEAD request to the `/poke` route at given intervals. In return, the route sends an `HTTP 204` status code, which is an OK Response without body. This amounts to **barely 800 bytes sent!**
+Larapoke pokes your App with a HTTP HEAD request to the `/poke` route at given intervals. In return, while your application renews the session lifetime, it sends an `HTTP 204` status code, which is an OK Response without body. 
+
+This amounts to **barely 800 bytes sent!**
 
 ## Usage
 

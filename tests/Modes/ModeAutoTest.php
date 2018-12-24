@@ -3,6 +3,7 @@
 namespace Tests\Modes;
 
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\View\Compilers\BladeCompiler;
 use Orchestra\Testbench\TestCase;
 
@@ -46,6 +47,12 @@ class ModeMiddlewareTest extends TestCase
             $router->get('/home', function() {
                 return $this->app->make(Factory::class)->make('home');
             })->name('home');
+            $router->get('/json', function () {
+                return $this->app->make(JsonResponse::class, [
+                    'example' => 'name="_token"',
+                    'csrf' => 'name="csrf-token"',
+                ]);
+            });
             $router->get('/form-only', function() { return $this->viewWithFormOnly(); })->name('form-only');
             $router->get('/header-only', function() { return $this->viewWithHeaderOnly(); })->name('header-only');
             $router->get('/nothing', function() { return $this->viewWithNothing(); })->name('nothing');
@@ -132,11 +139,17 @@ class ModeMiddlewareTest extends TestCase
         return rmdir($dir);
     }
 
-
+    public function testDoesntInjectsOnJson()
+    {
+        $response = $this->get('/json');
+        $this->assertNotContains('start-larapoke-script', $response->content());
+        $this->assertNotContains('end-larapoke-script', $response->content());
+    }
 
     public function testInjectsScriptOnFormWithHeader()
     {
         $response = $this->get('/register');
+
         $this->assertContains('start-larapoke-script', $response->content());
         $this->assertContains('end-larapoke-script', $response->content());
     }

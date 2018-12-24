@@ -3,9 +3,10 @@
 namespace Tests\Script;
 
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Orchestra\Testbench\TestCase;
 
-class ScriptResponseTest extends TestCase
+class ScriptRouteTest extends TestCase
 {
     protected function getPackageProviders($app)
     {
@@ -108,7 +109,6 @@ class ScriptResponseTest extends TestCase
         $request->assertStatus(204);
         $this->assertEmpty($request->content());
     }
-
 
     public function testWrongMethodGives405()
     {

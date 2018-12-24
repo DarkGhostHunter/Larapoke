@@ -3,6 +3,7 @@
 namespace DarkGhostHunter\Larapoke;
 
 use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
+use DarkGhostHunter\Larapoke\Http\Middleware\LarapokeGlobalMiddleware;
 use DarkGhostHunter\Larapoke\Http\Middleware\LarapokeMiddleware;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;
@@ -40,9 +41,9 @@ class LarapokeServiceProvider extends ServiceProvider
 
         $router->aliasMiddleware('larapoke', LarapokeMiddleware::class);
 
-        // If Larapoke is set to auto, push the middleware as global.
-        if ($this->app->make('config')['larapoke.mode'] === 'auto') {
-            $this->app->make(Kernel::class)->pushMiddleware(LarapokeMiddleware::class);
+        // If Larapoke is set to auto, push the global middleware.
+        if ($this->app->make('config')->get('larapoke.mode') === 'auto') {
+            $this->app->make(Kernel::class)->pushMiddleware(LarapokeGlobalMiddleware::class);
         }
     }
 

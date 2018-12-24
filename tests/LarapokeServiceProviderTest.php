@@ -4,6 +4,7 @@ namespace Tests;
 
 use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 use DarkGhostHunter\Larapoke\Http\Controllers\LarapokeController;
+use DarkGhostHunter\Larapoke\Http\Middleware\LarapokeGlobalMiddleware;
 use DarkGhostHunter\Larapoke\Http\Middleware\LarapokeMiddleware;
 use Illuminate\Contracts\Http\Kernel;
 use Orchestra\Testbench\TestCase;
@@ -87,13 +88,20 @@ class LarapokeServiceProviderTest extends TestCase
         $this->assertContains('larapoke_', $script);
     }
 
-    public function testRegistersMiddleware()
+    public function testRegistersGlobalMiddleware()
+    {
+        /** @var \Illuminate\Routing\Router $router */
+        $router = $this->app->make('router');
+
+        $this->assertTrue($this->app->make(Kernel::class)->hasMiddleware(LarapokeGlobalMiddleware::class));
+    }
+
+    public function testRegistersMiddlewareAlias()
     {
         /** @var \Illuminate\Routing\Router $router */
         $router = $this->app->make('router');
 
         $this->assertArrayHasKey('larapoke', $router->getMiddleware());
-        $this->assertTrue($this->app->make(Kernel::class)->hasMiddleware(LarapokeMiddleware::class));
     }
 
     public function testRegistersBladeDirective()

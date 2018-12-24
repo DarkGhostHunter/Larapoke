@@ -3,6 +3,7 @@
 namespace Tests\Modes;
 
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Orchestra\Testbench\TestCase;
 
 class ModeAutoTest extends TestCase
@@ -44,6 +45,12 @@ class ModeAutoTest extends TestCase
             $router->get('/login', function() {
                 return $this->app->make(Factory::class)->make('auth.login');
             })->name('login')->middleware('larapoke');
+            $router->get('/json', function () {
+                return $this->app->make(JsonResponse::class, [
+                    'example' => 'name="_token"',
+                    'csrf' => 'name="csrf-token"',
+                ]);
+            })->middleware('larapoke');
             $router->get('/form-only', function() { return $this->viewWithFormOnly(); })
                 ->name('form-only')->middleware('larapoke:detect');
             $router->get('/header-only', function() { return $this->viewWithHeaderOnly(); })
@@ -137,6 +144,12 @@ class ModeAutoTest extends TestCase
         return rmdir($dir);
     }
 
+    public function testDoesntInjectsOnJson()
+    {
+        $response = $this->get('/json');
+        $this->assertNotContains('start-larapoke-script', $response->content());
+        $this->assertNotContains('end-larapoke-script', $response->content());
+    }
 
 
     public function testNoScriptOnNoMiddleware()

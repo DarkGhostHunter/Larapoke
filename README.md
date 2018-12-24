@@ -24,7 +24,9 @@ composer require darkghosthunter/larapoke
 
 ## How does it work?
 
-Larapoke pokes your App with a HEAD request to the `/poke` route at given intervals. In return, the route sends an `HTTP 204` status code, which is an OK Response without body. This amounts to **barely 800 bytes sent!**
+Larapoke pokes your App with a HTTP HEAD request to the `/poke` route at given intervals. In return, while your application renews the session lifetime, it sends an `HTTP 204` status code, which is an OK Response without body. 
+
+This amounts to **barely 800 bytes sent!**
 
 ## Usage
 

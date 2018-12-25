@@ -19,11 +19,6 @@ env:
   global:
     - CC_TEST_REPORTER_ID=8c46a66121abb28da6533936b3dec28b53605b678b65ccb4684b87456a83d5ca
 
-before_install:
-  - export CHROME_BIN=/usr/bin/google-chrome
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-
 install:
   - composer install
   - composer require php-coveralls/php-coveralls:2.1.* --dev
@@ -32,7 +27,7 @@ before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9515 http://localhost &
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 
 script:
   - ./vendor/bin/phpunit -c ./ --coverage-clover build/logs/clover.xml

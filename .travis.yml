@@ -13,14 +13,19 @@ env:
   global:
     - CC_TEST_REPORTER_ID=8c46a66121abb28da6533936b3dec28b53605b678b65ccb4684b87456a83d5ca
 
+install:
+  - composer install
+  - composer require php-coveralls/php-coveralls:2.1.* --dev
+
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
+  - sh -e /etc/init.d/xvfb start
+  - ./vendor/laravel/dusk/bin/chromedriver-linux &
 
-install:
-  - composer install
-  - composer require php-coveralls/php-coveralls:2.1.* --dev
+script:
+  - ./vendor/bin/phpunit -c ./ --coverage-clover build/logs/clover.xml
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

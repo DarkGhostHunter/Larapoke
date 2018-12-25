@@ -42,7 +42,6 @@ class BrowserScriptTest extends TestCase
         $this->app = null;
     }
 
-
     protected function tearDown()
     {
         parent::tearDown();

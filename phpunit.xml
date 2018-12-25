@@ -11,6 +11,9 @@
          verbose="true"
 >
     <testsuites>
+        <testsuite name="Larapoke Browser Suite">
+            <directory suffix="Test.php">tests/Browser</directory>
+        </testsuite>
         <testsuite name="Larapoke Test Suite">
             <directory suffix="Test.php">tests/Unit</directory>
         </testsuite>

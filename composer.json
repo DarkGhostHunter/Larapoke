@@ -18,7 +18,8 @@
   },
   "require-dev": {
     "mockery/mockery": "1.2.*",
-    "orchestra/testbench": "3.7.*"
+    "orchestra/testbench": "3.7.*",
+    "orchestra/testbench-dusk": "3.7.x@dev"
   },
   "autoload-dev": {
     "psr-4": {

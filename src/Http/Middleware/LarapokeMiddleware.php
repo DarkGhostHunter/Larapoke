@@ -6,7 +6,7 @@ use Closure;
 
 class LarapokeMiddleware
 {
-    use DetectsCsrf, InjectsScript;
+    use DetectsInjectableResponse, InjectsScript;
 
     /**
      * Handle the incoming request.
@@ -21,7 +21,7 @@ class LarapokeMiddleware
         $response = $next($request);
 
         // Don't evaluate the response under "auto" or "blade" modes.
-        if (app('config')->get('larapoke.mode') === 'middleware') {
+        if (app('config')->get('larapoke.mode') === 'middleware' && $response->isOk()) {
             $response = $this->shouldInjectScript($response, $detect);
         }
 
@@ -37,8 +37,10 @@ class LarapokeMiddleware
      */
     public function shouldInjectScript($response, $detect)
     {
-        if (($detect === 'detect' && $this->hasCsrf($response))
-            || $detect !== 'detect') {
+        $shouldDetect = $detect === 'detect';
+
+        if (($shouldDetect && $this->isHtml($response) && $this->hasCsrf($response))
+            || !$shouldDetect) {
             return $this->injectScript($response);
         }
 

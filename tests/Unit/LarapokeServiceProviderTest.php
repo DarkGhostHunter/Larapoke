@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\Unit;
 
 use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 use DarkGhostHunter\Larapoke\Http\Controllers\LarapokeController;
@@ -41,7 +41,7 @@ class LarapokeServiceProviderTest extends TestCase
     public function testReceivesDefaultConfig()
     {
         $this->assertEquals(
-            include __DIR__ . '/../config/larapoke.php',
+            include __DIR__ . '/../../config/larapoke.php',
             $this->app['config']['larapoke']
         );
     }
@@ -54,7 +54,7 @@ class LarapokeServiceProviderTest extends TestCase
 
         $this->assertFileExists(config_path('larapoke.php'));
         $this->assertFileIsReadable(config_path('larapoke.php'));
-        $this->assertFileEquals(config_path('larapoke.php'), __DIR__ . '/../config/larapoke.php');
+        $this->assertFileEquals(config_path('larapoke.php'), __DIR__ . '/../../config/larapoke.php');
         $this->assertTrue(unlink(config_path('larapoke.php')));
     }
 

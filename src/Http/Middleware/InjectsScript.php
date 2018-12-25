@@ -13,17 +13,18 @@ trait InjectsScript
      * @param Response $response
      * @return Response
      */
-    protected function injectScript(Response $response)
+    protected function injectScript($response)
     {
         $content = $response->content();
 
-        $script = (new LarapokeDirective(app('config'), app('view')))();
+        if ($endBodyPosition = stripos($content, '</body>')) {
 
-        $endBodyPosition = stripos($content, '</body>');
+            $script = (new LarapokeDirective(app('config'), app('view')))();
 
-        $response->setContent(
-            substr_replace($content, $script, $endBodyPosition, 0)
-        );
+            $response->setContent(
+                substr_replace($content, $script, $endBodyPosition, 0)
+            );
+        };
 
         return $response;
     }

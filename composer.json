@@ -1,6 +1,6 @@
 {
   "name": "darkghosthunter/larapoke",
-  "description": "Keep your forms alive without security risk",
+  "description": "Keep your forms alive, avoid TokenMismatchException by gently poking your Laravel app",
   "minimum-stability": "stable",
   "license": "MIT",
   "authors": [

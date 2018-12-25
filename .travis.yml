@@ -24,6 +24,7 @@ before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9515 http://localhost
 
 script:
   - ./vendor/bin/phpunit -c ./ --coverage-clover build/logs/clover.xml

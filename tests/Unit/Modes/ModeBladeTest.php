@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Modes;
+namespace Tests\Unit\Modes;
 
 use Orchestra\Testbench\TestCase;
 

@@ -6,7 +6,7 @@ use Closure;
 
 class LarapokeGlobalMiddleware
 {
-    use DetectsCsrf, InjectsScript;
+    use DetectsInjectableResponse, InjectsScript;
 
     /**
      * Handle the incoming request.
@@ -20,7 +20,7 @@ class LarapokeGlobalMiddleware
     {
         $response = $next($request);
 
-        if ($this->hasCsrf($response)) {
+        if ($response->isOk() && $this->isHtml($response) && $this->hasCsrf($response)) {
             $this->injectScript($response);
         }
 

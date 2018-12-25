@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Script;
+namespace Tests\Unit\Script;
 
 use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 use Orchestra\Testbench\TestCase;

@@ -4,20 +4,16 @@ namespace DarkGhostHunter\Larapoke\Http\Middleware;
 
 use Illuminate\Http\Response;
 
-trait DetectsCsrf
+trait DetectsInjectableResponse
 {
     /**
      * Detect if the Response has form or CSRF Token
      *
-     * @param $response
+     * @param \Illuminate\Http\Response|\Illuminate\Http\JsonResponse $response
      * @return bool
      */
-    protected function hasCsrf(Response $response)
+    protected function hasCsrf($response)
     {
-        if (!$response->isOk() && $this->isHtml($response)) {
-            return false;
-        }
-
         $content = $response->content();
 
         $hasCsrfHeader = stripos($content, 'name="csrf-token"');
@@ -29,11 +25,11 @@ trait DetectsCsrf
     /**
      * Detect if the Response is HTML by its "content-type" header
      *
-     * @param Response $response
+     * @param \Illuminate\Http\Response|\Illuminate\Http\JsonResponse $response
      * @return bool
      */
-    protected function isHtml(Response $response)
+    protected function isHtml($response)
     {
-        return strpos($response->headers->get('content-type'), 'text/html') === false;
+        return strpos($response->headers->get('content-type'), 'text/html') !== false;
     }
 }

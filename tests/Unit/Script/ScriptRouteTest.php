@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Script;
+namespace Tests\Unit\Script;
 
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
@@ -53,6 +53,22 @@ class ScriptRouteTest extends TestCase
                 }
             };
         });
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+
+        $this->recurseRmdir(resource_path('views/auth'));
+        $this->recurseRmdir(resource_path('views/layouts'));
+    }
+
+    protected function recurseRmdir($dir) {
+        $files = array_diff(scandir($dir), array('.','..'));
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? $this->recurseRmdir("$dir/$file") : unlink("$dir/$file");
+        }
+        return rmdir($dir);
     }
 
     protected function setUp()

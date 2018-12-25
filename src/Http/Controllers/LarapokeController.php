@@ -8,7 +8,7 @@ use Illuminate\Routing\Controller;
 class LarapokeController extends Controller
 {
     /**
-     * Show the profile for the given user.
+     * Return an empty Ok response to the Poke script.
      *
      * @return \Illuminate\Http\Response
      */

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Modes;
 
+use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\Compilers\BladeCompiler;
@@ -33,6 +34,8 @@ class ModeMiddlewareTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
+
+        LarapokeDirective::setWasRendered(false);
 
         /** @var \Illuminate\Routing\Router $router */
         $router = $this->app->make('router');

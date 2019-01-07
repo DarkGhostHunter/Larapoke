@@ -106,7 +106,7 @@ The `blade` allows you to use the `@larapoke` directive to inject the script any
 </form>
 ```
 
-Don't worry if you use many `@larapoke` directives in your view; the script will intelligently use only the first occurrence instead of instancing multiple times. 
+Don't worry if you use many `@larapoke` directives in your view, the script will be injected itself only on the first occurrence instead of multiple times. Even then, if you forcefully render manually in multiple places, the subsequent scripts won't do nothing.  
 
 ## Configuration
 
@@ -148,13 +148,13 @@ So, basically, `session lifetime / times = poking interval`.
 
 ### Timeout
 
-When activated, this will allow Larapoke script to guess if the session is expired based on unsuccessful pokes, every two seconds. If the session should be expired by then, it will force a page reload.
+When activated, this will allow Larapoke script to guess if the CSRF session token is expired based on unsuccessful pokes, every two seconds. If the session should be expired by then, it will force a page reload to renew the CRSF token.
 
 This is handy in situations when the user laptop is put to sleep, or loses phone signal. Because the session may expire during this events, when the browser wakes up the page is reloaded to get the new CSRF token. 
 
 ### Poking
 
-This is the array relative to the poking route itself.
+This is the array of settings for the poking route which receives the script HTTP HEAD Request.
 
 #### Route
 
@@ -173,7 +173,7 @@ return [
 
 #### Name
 
-Just the naming of the route. This way you can find the poke route in your app for whatever reason by its name.
+Name of the route. This way you can find the poke route in your app for whatever reason.
 
 ```php
 <?php 
@@ -208,7 +208,7 @@ The default Larapoke route uses the "web" middleware group, which is the default
 <?php 
 return [
     'poking' => [
-        'middleware' => ['web', 'validates-ip','app-demilitarized-zone']
+        'middleware' => ['auth:api', 'validates-ip', 'my-custom-middleware']
     ],
 ];
 ```

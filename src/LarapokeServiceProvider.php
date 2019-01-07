@@ -60,7 +60,9 @@ class LarapokeServiceProvider extends ServiceProvider
         $view->getEngineResolver()
             ->resolve('blade')
             ->getCompiler()
-            ->directive('larapoke', new LarapokeDirective($this->app->make('config'), $view));
+            ->directive('larapoke', function () {
+                return $this->app->build(LarapokeDirective::class)->getRenderedScript();
+            });
     }
 
     /**

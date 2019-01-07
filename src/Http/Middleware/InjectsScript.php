@@ -12,20 +12,24 @@ trait InjectsScript
      *
      * @param Response $response
      * @return Response
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     protected function injectScript($response)
     {
-        $content = $response->content();
-
-        if ($endBodyPosition = stripos($content, '</body>')) {
-
-            $script = (new LarapokeDirective(app('config'), app('view')))();
-
-            $response->setContent(
-                substr_replace($content, $script, $endBodyPosition, 0)
-            );
+        // To inject the script automatically, we will do it before the ending
+        // body tag. If it's not found, the response may not be valid HTML,
+        // so we will bail out returning the original untouched content.
+        if (!$endBodyPosition = stripos($content = $response->content(), '</body>')) {
+            return $response;
         };
 
-        return $response;
+        // Calling Build instead of instancing the class will allow to automatically
+        // inject the services into the directive instead of manually doing it,
+        // since we don't know what implementation the application may have.
+        $script = app()->build(LarapokeDirective::class)->getRenderedScript();
+
+        return $response->setContent(
+            substr_replace($content, $script, $endBodyPosition, 0)
+        );
     }
 }

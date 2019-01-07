@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Modes;
 
+use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 use Orchestra\Testbench\TestCase;
 
 class ModeBladeTest extends TestCase
@@ -30,6 +31,8 @@ class ModeBladeTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
+
+        LarapokeDirective::setWasRendered(false);
 
         /** @var \Illuminate\Routing\Router $router */
         $router = $this->app->make('router');
@@ -155,11 +158,12 @@ class ModeBladeTest extends TestCase
     public function testInjectsOnceOnMultipleForms()
     {
         $response = $this->get('/multiple-form');
+
         $this->assertContains('start-larapoke-script', $response->content());
         $this->assertContains('end-larapoke-script', $response->content());
 
-        $this->assertTrue(substr_count($response->content(), 'start-larapoke-script') === 2);
-        $this->assertTrue(substr_count($response->content(), 'end-larapoke-script') === 2);
+        $this->assertTrue(substr_count($response->content(), 'start-larapoke-script') === 1);
+        $this->assertTrue(substr_count($response->content(), 'end-larapoke-script') === 1);
     }
 
     public function testInjectsOnceOnMiddlewareAndMultipleForms()
@@ -169,8 +173,8 @@ class ModeBladeTest extends TestCase
         $this->assertContains('start-larapoke-script', $response->content());
         $this->assertContains('end-larapoke-script', $response->content());
 
-        $this->assertTrue(substr_count($response->content(), 'start-larapoke-script') === 2);
-        $this->assertTrue(substr_count($response->content(), 'end-larapoke-script') === 2);
+        $this->assertTrue(substr_count($response->content(), 'start-larapoke-script') === 1);
+        $this->assertTrue(substr_count($response->content(), 'end-larapoke-script') === 1);
     }
 
 

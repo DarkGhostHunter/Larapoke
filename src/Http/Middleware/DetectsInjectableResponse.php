@@ -2,8 +2,6 @@
 
 namespace DarkGhostHunter\Larapoke\Http\Middleware;
 
-use Illuminate\Http\Response;
-
 trait DetectsInjectableResponse
 {
     /**
@@ -30,6 +28,6 @@ trait DetectsInjectableResponse
      */
     protected function isHtml($response)
     {
-        return strpos($response->headers->get('content-type'), 'text/html') !== false;
+        return strpos($response->headers->get('Content-type'), 'text/html') !== false;
     }
 }

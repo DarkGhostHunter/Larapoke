@@ -29,9 +29,20 @@ class ScriptTest extends TestCase
         $this->mockConfig = \Mockery::mock(\Illuminate\Config\Repository::class);
 
         $this->mockView = \Mockery::mock(\Illuminate\View\Factory::class);
+
+        LarapokeDirective::setWasRendered(false);
     }
 
-    public function testConfig()
+    public function testSetAndGetWasRendered()
+    {
+        $this->assertFalse(LarapokeDirective::getWasRendered());
+        LarapokeDirective::setWasRendered(true);
+        $this->assertTrue(LarapokeDirective::getWasRendered());
+        LarapokeDirective::setWasRendered(false);
+        $this->assertFalse(LarapokeDirective::getWasRendered());
+    }
+
+    public function testReceivesConfig()
     {
         $this->mockView
             ->shouldReceive('make')
@@ -69,20 +80,10 @@ class ScriptTest extends TestCase
             ->with('larapoke.timeout')
             ->andReturn(false);
 
-        $reflection = new \ReflectionClass(LarapokeDirective::class);
-
-        $properties = $reflection->getProperties();
-
-        foreach ($properties as $property) {
-            $property->setAccessible(true);
-            $property->setValue(null, null);
-            $property->setAccessible(false);
-        }
-
-        $script = (new LarapokeDirective($this->mockConfig, $this->mockView))();
+        $script = (new LarapokeDirective($this->mockConfig, $this->mockView))->getRenderedScript();
 
         $this->assertEquals($script['route'], 'test-larapoke-route');
-        $this->assertEquals($script['interval'], ($this->sessionLifetime * 60) / $this->times);
+        $this->assertEquals($script['interval'], (int)(($this->sessionLifetime * 60) / $this->times));
         $this->assertFalse($script['timeout']);
         $this->assertEquals($script['lifetime'], $this->sessionLifetime * 60);
     }

@@ -48,8 +48,8 @@ LARAPOKE_MODE=auto
 
 Just install this package and *look at it go*. This will push a global middleware that will look into all your Responses content where:
 
-a) an input where `csrf` token is present, or
-b) a header where `csrf-token` is present.
+* an input where `csrf` token is present, or
+* a header where `csrf-token` is present.
 
 If there is any match, this will inject the Larapoke script, that will be in charge to keep the forms alive, just before the `</body>` tag.
 

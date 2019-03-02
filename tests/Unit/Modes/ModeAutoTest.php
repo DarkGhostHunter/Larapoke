@@ -31,7 +31,7 @@ class ModeMiddlewareTest extends TestCase
         $this->app = null;
     }
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
@@ -126,7 +126,7 @@ class ModeMiddlewareTest extends TestCase
         ');
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         parent::tearDown();
 
@@ -145,37 +145,37 @@ class ModeMiddlewareTest extends TestCase
     public function testDoesntInjectsOnJson()
     {
         $response = $this->get('/json');
-        $this->assertNotContains('start-larapoke-script', $response->content());
-        $this->assertNotContains('end-larapoke-script', $response->content());
+        $this->assertStringNotContainsString('start-larapoke-script', $response->content());
+        $this->assertStringNotContainsString('end-larapoke-script', $response->content());
     }
 
     public function testInjectsScriptOnFormWithHeader()
     {
         $response = $this->get('/register');
 
-        $this->assertContains('start-larapoke-script', $response->content());
-        $this->assertContains('end-larapoke-script', $response->content());
+        $this->assertStringContainsString('start-larapoke-script', $response->content());
+        $this->assertStringContainsString('end-larapoke-script', $response->content());
     }
 
     public function testInjectsScriptOnForm()
     {
         $response = $this->get('/form-only');
-        $this->assertContains('start-larapoke-script', $response->content());
-        $this->assertContains('end-larapoke-script', $response->content());
+        $this->assertStringContainsString('start-larapoke-script', $response->content());
+        $this->assertStringContainsString('end-larapoke-script', $response->content());
     }
 
     public function testInjectsScriptOnHeader()
     {
         $response = $this->get('/header-only');
-        $this->assertContains('start-larapoke-script', $response->content());
-        $this->assertContains('end-larapoke-script', $response->content());
+        $this->assertStringContainsString('start-larapoke-script', $response->content());
+        $this->assertStringContainsString('end-larapoke-script', $response->content());
     }
 
     public function testInjectsScriptOnNothing()
     {
         $response = $this->get('/nothing');
-        $this->assertNotContains('start-larapoke-script', $response->content());
-        $this->assertNotContains('end-larapoke-script', $response->content());
+        $this->assertStringNotContainsString('start-larapoke-script', $response->content());
+        $this->assertStringNotContainsString('end-larapoke-script', $response->content());
     }
 
 }

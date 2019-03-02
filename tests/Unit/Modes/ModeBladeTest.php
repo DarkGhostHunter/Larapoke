@@ -28,7 +28,7 @@ class ModeBladeTest extends TestCase
         $this->app = null;
     }
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
@@ -125,7 +125,7 @@ class ModeBladeTest extends TestCase
         ');
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         parent::tearDown();
 
@@ -144,23 +144,23 @@ class ModeBladeTest extends TestCase
     public function testNoScriptOnRouteWithoutMiddleware()
     {
         $response = $this->get('/register');
-        $this->assertNotContains('start-larapoke-script', $response->content());
-        $this->assertNotContains('end-larapoke-script', $response->content());
+        $this->assertStringNotContainsString('start-larapoke-script', $response->content());
+        $this->assertStringNotContainsString('end-larapoke-script', $response->content());
     }
 
     public function testInjectsScriptOnForm()
     {
         $response = $this->get('/form-only');
-        $this->assertContains('start-larapoke-script', $response->content());
-        $this->assertContains('end-larapoke-script', $response->content());
+        $this->assertStringContainsString('start-larapoke-script', $response->content());
+        $this->assertStringContainsString('end-larapoke-script', $response->content());
     }
 
     public function testInjectsOnceOnMultipleForms()
     {
         $response = $this->get('/multiple-form');
 
-        $this->assertContains('start-larapoke-script', $response->content());
-        $this->assertContains('end-larapoke-script', $response->content());
+        $this->assertStringContainsString('start-larapoke-script', $response->content());
+        $this->assertStringContainsString('end-larapoke-script', $response->content());
 
         $this->assertTrue(substr_count($response->content(), 'start-larapoke-script') === 1);
         $this->assertTrue(substr_count($response->content(), 'end-larapoke-script') === 1);
@@ -170,8 +170,8 @@ class ModeBladeTest extends TestCase
     {
         $response = $this->get('/multiple-form-with-middleware');
 
-        $this->assertContains('start-larapoke-script', $response->content());
-        $this->assertContains('end-larapoke-script', $response->content());
+        $this->assertStringContainsString('start-larapoke-script', $response->content());
+        $this->assertStringContainsString('end-larapoke-script', $response->content());
 
         $this->assertTrue(substr_count($response->content(), 'start-larapoke-script') === 1);
         $this->assertTrue(substr_count($response->content(), 'end-larapoke-script') === 1);

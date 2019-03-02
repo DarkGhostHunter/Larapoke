@@ -85,7 +85,7 @@ class LarapokeServiceProviderTest extends TestCase
             ->render();
 
         $this->assertIsString($script);
-        $this->assertContains('larapoke_', $script);
+        $this->assertStringContainsString('larapoke_', $script);
     }
 
     public function testRegistersGlobalMiddleware()

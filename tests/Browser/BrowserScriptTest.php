@@ -17,7 +17,6 @@ class BrowserScriptTest extends TestCase
 
     protected function getEnvironmentSetUp($app)
     {
-
         $this->app = $app;
 
         $app['config']->set('session.lifetime', 1);
@@ -60,9 +59,7 @@ class BrowserScriptTest extends TestCase
 
     public function testPokeWorks()
     {
-        if (strnatcmp(phpversion(),'7.3.0') <= 0) {
-            $this->markTestSkipped('Browser test won\'t work on TravisCI and PHP 7.3.0. Locally it works, though.');
-        }
+        $this->markTestSkipped('Until Orchestra Testbench for Laravel Dusk is updated, we cannot do browser tests');
 
         $this->browse(function ($first, $second) {
             /** @var \Laravel\Dusk\Browser $first */

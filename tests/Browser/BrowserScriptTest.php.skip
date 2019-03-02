@@ -17,7 +17,6 @@ class BrowserScriptTest extends TestCase
 
     protected function getEnvironmentSetUp($app)
     {
-
         $this->app = $app;
 
         $app['config']->set('session.lifetime', 1);
@@ -60,6 +59,8 @@ class BrowserScriptTest extends TestCase
 
     public function testPokeWorks()
     {
+        $this->markTestSkipped('Until Orchestra Testbench for Laravel Dusk is updated, we cannot do browser tests');
+
         $this->browse(function ($first, $second) {
             /** @var \Laravel\Dusk\Browser $first */
             $first->visit('/register')

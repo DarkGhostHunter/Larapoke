@@ -24,7 +24,7 @@ class ScriptTest extends TestCase
 
     protected $times;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->mockConfig = \Mockery::mock(\Illuminate\Config\Repository::class);
 

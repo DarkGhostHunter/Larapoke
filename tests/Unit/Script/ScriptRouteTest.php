@@ -55,7 +55,7 @@ class ScriptRouteTest extends TestCase
         });
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         parent::tearDown();
 
@@ -71,7 +71,7 @@ class ScriptRouteTest extends TestCase
         return rmdir($dir);
     }
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 

@@ -149,6 +149,15 @@ class ModeMiddlewareTest extends TestCase
         $this->assertStringNotContainsString('end-larapoke-script', $response->content());
     }
 
+    public function testDoesntInjectsOnAjax()
+    {
+        $response = $this->get('/form-only', [
+            'X-Requested-With' => 'XMLHttpRequest',
+        ]);
+        $this->assertStringNotContainsString('start-larapoke-script', $response->content());
+        $this->assertStringNotContainsString('end-larapoke-script', $response->content());
+    }
+
     public function testInjectsScriptOnFormWithHeader()
     {
         $response = $this->get('/register');

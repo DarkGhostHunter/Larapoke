@@ -76,12 +76,11 @@ class LarapokeDirective
      */
     protected function parseConfig()
     {
-        $session = $this->config->get('session.lifetime') * 60;
+        $session = $this->config->get('session.lifetime') * 60 * 1000;
 
         return [
             'route' => $this->config->get('larapoke.poking.route'),
             'interval' => (int)($session / $this->config->get('larapoke.times')),
-            'timeout' => $this->config->get('larapoke.timeout'),
             'lifetime' => $session,
         ];
     }
@@ -95,7 +94,10 @@ class LarapokeDirective
     {
         self::$wasRendered = true;
 
-        return $this->view->make('larapoke::script', $this->parseConfig())->render();
+        return $this->view->make(
+            $this->config->get('larapoke.view'),
+            $this->parseConfig()
+        )->render();
     }
 
     /**

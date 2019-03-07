@@ -46,7 +46,7 @@ class ScriptTest extends TestCase
     {
         $this->mockView
             ->shouldReceive('make')
-            ->with('larapoke::script', \Mockery::type('array'))
+            ->with('custom-larapoke-view', \Mockery::type('array'))
             ->andReturnUsing(function ($script, $config) {
                 return (new class ($config)
                 {
@@ -77,14 +77,22 @@ class ScriptTest extends TestCase
             ->andReturn($this->times = rand(2, 16));
 
         $this->mockConfig->shouldReceive('get')
-            ->with('larapoke.timeout')
-            ->andReturn(false);
+            ->with('larapoke.view')
+            ->andReturn('custom-larapoke-view');
 
         $script = (new LarapokeDirective($this->mockConfig, $this->mockView))->getRenderedScript();
 
-        $this->assertEquals($script['route'], 'test-larapoke-route');
-        $this->assertEquals($script['interval'], (int)(($this->sessionLifetime * 60) / $this->times));
-        $this->assertFalse($script['timeout']);
-        $this->assertEquals($script['lifetime'], $this->sessionLifetime * 60);
+        $this->assertEquals(
+            'test-larapoke-route',
+            $script['route']
+        );
+        $this->assertEquals(
+            (int)((($this->sessionLifetime * 60 * 1000) / $this->times)),
+            $script['interval']
+        );
+        $this->assertEquals(
+            $this->sessionLifetime * 60 * 1000,
+            $script['lifetime']
+        );
     }
 }

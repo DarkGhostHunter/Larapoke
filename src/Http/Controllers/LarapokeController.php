@@ -11,6 +11,7 @@ class LarapokeController extends Controller
      * Return an empty Ok response to the Poke script.
      *
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function __invoke()
     {

@@ -14,6 +14,7 @@ class LarapokeServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      *
      * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function boot()
     {
@@ -24,6 +25,10 @@ class LarapokeServiceProvider extends ServiceProvider
             __DIR__.'/../config/larapoke.php' => config_path('larapoke.php'),
         ], 'config');
 
+        $this->publishes([
+            __DIR__.'/../resources/views' => resource_path('views/vendor/larapoke'),
+        ]);
+
         $this->bootMiddleware();
 
         $this->bootBladeDirective();
@@ -33,6 +38,7 @@ class LarapokeServiceProvider extends ServiceProvider
      * Registers (or push globally) the Middleware
      *
      * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     protected function bootMiddleware()
     {
@@ -51,6 +57,7 @@ class LarapokeServiceProvider extends ServiceProvider
      * Registers the Blade Directive
      *
      * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     protected function bootBladeDirective()
     {

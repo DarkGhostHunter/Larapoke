@@ -4,23 +4,20 @@ namespace DarkGhostHunter\Larapoke\Http\Middleware;
 
 use Closure;
 
-class LarapokeGlobalMiddleware
+class LarapokeGlobalMiddleware extends BaseLarapokeMiddleware
 {
-    use DetectsInjectableResponse, InjectsScript;
-
     /**
      * Handle the incoming request.
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
-     * @param bool $detect
      * @return mixed
      */
-    public function handle($request, Closure $next, $detect = null)
+    public function handle($request, Closure $next)
     {
         $response = $next($request);
 
-        if ($response->isOk() && $this->isHtml($response) && $this->hasCsrf($response)) {
+        if ($response->isOk() && $this->isHtml($request) && $this->hasCsrf($response)) {
             $this->injectScript($response);
         }
 

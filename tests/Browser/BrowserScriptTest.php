@@ -3,6 +3,7 @@
 namespace Tests\Browser;
 
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Str;
 use Orchestra\Testbench\Dusk\TestCase;
 
 class BrowserScriptTest extends TestCase
@@ -20,11 +21,10 @@ class BrowserScriptTest extends TestCase
         $this->app = $app;
 
         $app['config']->set('session.lifetime', 1);
+        $app['config']->set('session.expire_on_close', true);
+        $app['config']->set('app.key', Str::random(32));
 
-        $this->artisan('make:auth', [
-            '--force' => true,
-            '--views' => true,
-        ])->run();
+        $this->artisan('make:auth --force --views')->run();
 
         $app['router']->group(['middleware' => ['web']], function () use ($app) {
             $app['router']->get('/register', function() {
@@ -41,7 +41,7 @@ class BrowserScriptTest extends TestCase
         $this->app = null;
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         parent::tearDown();
 

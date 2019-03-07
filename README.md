@@ -162,15 +162,15 @@ So, basically, `session lifetime / times = poking interval`.
 
 ### Script View
 
-Larapoke uses its own Blade template to inject the script. The default template should be enough for any Laravel application.
+Larapoke uses its own Blade template to inject the script.
 
-Of curse you can create your own script inside a Blade template. You can point out a custom template or override the default by creating a `views/vendor/larapoke/script.blade.php` file.
+Of course you can create your own script. You can point out a custom Blade template or override the default by creating a `views/vendor/larapoke/script.blade.php` file.
 
 Why would you? Some people may want to change this to a custom script, maybe because they want to use a Javascript HTTP library, minify the response, or even [create a custom Event](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events) when CSRF token expires.
 
-The view will receive:
+The view receives three variables:
 
-* `$route`: The full route where the poking will be done
+* `$route`: The full route where the poking will be done.
 * `$interval`: The interval in milliseconds the poking should be done.
 * `$lifetime`: The session lifetime in milliseconds.
 

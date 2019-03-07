@@ -2,6 +2,9 @@
 
 namespace DarkGhostHunter\Larapoke\Http\Middleware;
 
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+
 trait DetectsInjectableResponse
 {
     /**
@@ -10,10 +13,13 @@ trait DetectsInjectableResponse
      * @param \Illuminate\Http\Response|\Illuminate\Http\JsonResponse $response
      * @return bool
      */
-    protected function hasCsrf($response)
+    protected function hasCsrf(Response $response)
     {
         $content = $response->content();
 
+        // We don't know how the dev will code its application HTML, he could even
+        // use all-caps lock everything. We don't enforce a code-style, we will
+        // use "stripos" instead of "strpos" for a tiny 6% less performance.
         $hasCsrfHeader = stripos($content, 'name="csrf-token"');
         $hasCsrfInput = stripos($content, 'name="_token"');
 
@@ -21,13 +27,13 @@ trait DetectsInjectableResponse
     }
 
     /**
-     * Detect if the Response is HTML by its "content-type" header
+     * Detect if the Request accepts HTML and is not an AJAX/PJAX Request
      *
-     * @param \Illuminate\Http\Response|\Illuminate\Http\JsonResponse $response
+     * @param \Illuminate\Http\Request $request
      * @return bool
      */
-    protected function isHtml($response)
+    protected function isHtml(Request $request)
     {
-        return strpos($response->headers->get('Content-type'), 'text/html') !== false;
+        return $request->acceptsHtml() && !$request->ajax() && !$request->pjax();
     }
 }

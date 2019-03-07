@@ -12,7 +12,6 @@ trait InjectsScript
      *
      * @param Response $response
      * @return Response
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     protected function injectScript($response)
     {

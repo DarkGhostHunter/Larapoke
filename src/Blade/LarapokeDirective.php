@@ -80,8 +80,7 @@ class LarapokeDirective
 
         return [
             'route' => $this->config->get('larapoke.poking.route'),
-            'interval' => (int)($session / $this->config->get('larapoke.times')),
-            'timeout' => $this->config->get('larapoke.timeout'),
+            'interval' => (int)($session / $this->config->get('larapoke.times')) * 1000,
             'lifetime' => $session,
         ];
     }
@@ -95,7 +94,10 @@ class LarapokeDirective
     {
         self::$wasRendered = true;
 
-        return $this->view->make('larapoke::script', $this->parseConfig())->render();
+        return $this->view->make(
+            $this->config->get('larapoke.view'),
+            $this->parseConfig()
+        )->render();
     }
 
     /**

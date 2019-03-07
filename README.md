@@ -30,11 +30,19 @@ Larapoke pokes your App with a HTTP HEAD request to the `/poke` route at given i
 
 This amounts to **barely 800 bytes sent!**
 
+### Automatic Reloading on CSRF token expiration
+
+Larapoke script will detect if the CSRF session token is expired based on the last successful poke, and forcefully reload the page if there is Internet connection.
+
+This is done by detecting [when the browser or tab becomes active](https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API), or [when the device user becomes online again](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine/Online_and_offline_events).
+
+This is handy in situations when the user laptop is put to sleep, or the phone loses signal. Because the session may expire during these moments, when the browser wakes up or the phone becomes online the page is reloaded to get the new CSRF token.
+
 ## Usage
 
 There are three ways to turn on Larapoke in your app. 
 
-* `auto` (enabled by default)
+* `auto` (hands-off default)
 * `middleware`
 * `manual`
 
@@ -51,7 +59,7 @@ Just install this package and *look at it go*. This will push a global middlewar
 * an input where `csrf` token is present, or
 * a header where `csrf-token` is present.
 
-If there is any match, this will inject the Larapoke script, that will be in charge to keep the forms alive, just before the `</body>` tag.
+If there is any case-insensitive match, this will inject the Larapoke script, that will be in charge to keep the forms alive, just before the `</body>` tag.
 
 > It's recommended to the other modes if your application has many routes or Responses with a lot of text.
 
@@ -70,7 +78,7 @@ Route::get('register', 'Auth\RegisterController@showForm')
 
 This will forcefully inject the script, even if there is no form, into the route. You can also apply this to a [route group](https://laravel.com/docs/routing#route-groups).
 
-Since a route group may contain routes without any form, you can add the `detect` option to the middleware which will scan the Response for a form and inject the script only if it finds one.
+Since a route group may contain routes without any form, you can add the `detect` option to the middleware which will scan the Response for a CSRF token and inject the script only if it finds one.
 
 ```php
 <?php
@@ -81,7 +89,10 @@ Route::prefix('informationForms')
     ->middleware('larapoke:detect')
     ->group(function () {
         
+        // Here it will be injected
         Route::get('register', 'Auth\RegisterController@showForm');
+        
+        // But not here since there is no form
         Route::get('status', 'Auth\RegisterController@status');
         
     });
@@ -89,9 +100,11 @@ Route::prefix('informationForms')
 
 ### `blade`
 
-The `blade` allows you to use the `@larapoke` directive to inject the script anywhere in your view, keeping the forms of that Response alive.
+The `blade` method allows you to use the `@larapoke` directive to inject the script anywhere in your view, keeping the forms of that Response alive.
 
 ```html
+
+<h2>Try to Login:</h2>
 <form action="/login" method="post">
     @csrf
     @larapoke
@@ -99,7 +112,7 @@ The `blade` allows you to use the `@larapoke` directive to inject the script any
     <input type="password" name="password" required>
     <button type="submit">Log me in!</button>
 </form>
-
+<h2>Or reset your password</h2>
 <form action="/password" method="post">
     @csrf
     @larapoke
@@ -108,7 +121,7 @@ The `blade` allows you to use the `@larapoke` directive to inject the script any
 </form>
 ```
 
-Don't worry if you use many `@larapoke` directives in your view, the script will be injected itself only on the first occurrence instead of multiple times. Even then, if you forcefully render manually in multiple places, the subsequent scripts won't do nothing.  
+Don't worry if you use many `@larapoke` directives in your view, like in this example. The script will be injected itself only on the first occurrence instead of multiple times. Even then, if you forcefully render the script manually in multiple places, the subsequent scripts won't do nothing.
 
 ## Configuration
 
@@ -124,12 +137,12 @@ Let's examine the configuration array for Larapoke:
 <?php return [
     'mode' => env('LARAPOKE_MODE', 'auto'),
     'times' => 4,
-    'timeout' => false,
+    'view' => 'larapoke::script',
     'poking' => [
         'route' => 'poke',
         'name' => 'larapoke',
         'domain' => null,
-        'middleware' => ['web']
+        'middleware' => ['web'],
     ]
 ];
 ```
@@ -140,19 +153,26 @@ How many times the poking will be done relative to the global session lifetime. 
 
 For example, if our session lifetime is the default of 120 minutes:
 
-- 3 times will poke the application each 40 minutes. 
-- 4 times will poke the application each 30 minutes. 
-- 5 times will poke the application each 24 minutes.
-- 6 times will poke the application each 20 minutes.
-- and so on.
+- 3 times will poke the application each 40 minutes, 
+- 4 times will poke the application each 30 minutes, 
+- 5 times will poke the application each 24 minutes,
+- 6 times will poke the application each 20 minutes, and so on...
 
 So, basically, `session lifetime / times = poking interval`.
 
-### Timeout
+### Script View
 
-When activated, this will allow Larapoke script to guess if the CSRF session token is expired based on unsuccessful pokes, every two seconds. If the session should be expired by then, it will force a page reload to renew the CRSF token.
+Larapoke uses its own Blade template to inject the script. The default template should be enough for any Laravel application.
 
-This is handy in situations when the user laptop is put to sleep, or loses phone signal. Because the session may expire during this events, when the browser wakes up the page is reloaded to get the new CSRF token. 
+Of curse you can create your own script inside a Blade template. You can point out a custom template or override the default by creating a `views/vendor/larapoke/script.blade.php` file.
+
+Why would you? Some people may want to change this to a custom script, maybe because they want to use a Javascript HTTP library, minify the response, or even [create a custom Event](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events) when CSRF token expires.
+
+The view will receive:
+
+* `$route`: The full route where the poking will be done
+* `$interval`: The interval in milliseconds the poking should be done.
+* `$lifetime`: The session lifetime in milliseconds.
 
 ### Poking
 
@@ -171,17 +191,17 @@ return [
 ];
 ```
 
-> The poke routes are registered before any set in your application. You *could* rewrite the poke route with your own logic before responding with HTTP 204. 
+> The poke routes are registered before any set in your application. You *could* override the poke route with your own logic before responding with HTTP 204. 
 
 #### Name
 
-Name of the route. This way you can find the poke route in your app for whatever reason.
+Name of the route, to find the poke route in your app for whatever reason.
 
 ```php
 <?php 
 return [
     'poking' => [
-        'name' => 'the-larapoke-route'
+        'name' => 'my-custom-poking-route'
     ],
 ];
 ```

@@ -31,16 +31,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Timeout
+    | View
     |--------------------------------------------------------------------------
     |
-    | You can force a page reload if the session lifetime exceeds the last
-    | successful poke. This hides the `TokenMismatchException` from the
-    | User, and instead allows to retake the session transparently.
+    | Laravel comes with a Blade template containing the script to keep the
+    | forms alive. The default is very complete, but if you need something
+    | more advanced, you can override it with your own, or use another.
     |
     */
 
-    'timeout' => true,
+    'view' => 'larapoke::script',
 
     /*
     |--------------------------------------------------------------------------

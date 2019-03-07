@@ -3,10 +3,26 @@
 namespace DarkGhostHunter\Larapoke\Http\Middleware;
 
 use Closure;
+use Illuminate\Contracts\Config\Repository as Config;
 
-class LarapokeMiddleware
+class LarapokeMiddleware extends BaseLarapokeMiddleware
 {
-    use DetectsInjectableResponse, InjectsScript;
+    /**
+     * The Config Repository for this Laravel application
+     *
+     * @var Config
+     */
+    protected $modeIsMiddleware = false;
+
+    /**
+     * LarapokeGlobalMiddleware constructor.
+     *
+     * @param Config $config
+     */
+    public function __construct(Config $config)
+    {
+        $this->modeIsMiddleware = $config->get('larapoke.mode') === 'middleware';
+    }
 
     /**
      * Handle the incoming request.
@@ -21,29 +37,32 @@ class LarapokeMiddleware
         $response = $next($request);
 
         // Don't evaluate the response under "auto" or "blade" modes.
-        if (app('config')->get('larapoke.mode') === 'middleware' && $response->isOk()) {
-            $response = $this->shouldInjectScript($response, $detect);
+        if ($this->modeIsMiddleware &&
+            $response->isOk() &&
+            $this->shouldInjectScript($request, $response, $detect)) {
+
+            return $this->injectScript($response);
         }
 
         return $response;
     }
 
     /**
-     * Should inject the script into the response.
+     * Determine if we should inject the script into the response.
      *
-     * @param $response
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Response $response
      * @param string|null $detect
-     * @return \Illuminate\Http\Response
+     * @return bool
      */
-    public function shouldInjectScript($response, $detect)
+    public function shouldInjectScript($request, $response, $detect)
     {
-        $shouldDetect = $detect === 'detect';
+        // Check first if the middleware has to detect if there is a CSRF token
+        // before injecting the script in the response. When not detecting,
+        // then we tell to inject the script anyway into the Response.
+        $injectAnyway = $detect !== 'detect';
 
-        if (($shouldDetect && $this->isHtml($response) && $this->hasCsrf($response))
-            || !$shouldDetect) {
-            return $this->injectScript($response);
-        }
-
-        return $response;
+        return $injectAnyway ||
+            !$injectAnyway && $this->isHtml($request) && $this->hasCsrf($response);
     }
 }

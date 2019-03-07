@@ -1,4 +1,3 @@
-
 <script>
     // start-larapoke-script
     if (typeof larapoke_script === 'undefined') {
@@ -11,16 +10,25 @@
                 if (ajax.readyState === 4 && ajax.status === 204) {
                     larapoke_date = new Date();
                 }
+                larapoke_script_expired();
             };
 
             ajax.open('HEAD', '{{ $route }}');
             ajax.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             ajax.send();
+
         };
 
-        setInterval(() => { larapoke_script(); }, {{ $interval }} * 1000);
+        const larapoke_script_expired = () => {
+            if (navigator.onLine && new Date() - larapoke_date >= {{ $interval }} + {{ $lifetime }}) {
+                location.reload(true);
+            }
+        };
 
-        @if($timeout)@include('larapoke::timeout')@endif
+        setInterval(() => { larapoke_script(); }, {{ $interval }} );
+
+        document.addEventListener('visibilitychange', larapoke_script_expired(), false);
+        window.addEventListener('online',  larapoke_script_expired());
     }
     // end-larapoke-script
 </script>

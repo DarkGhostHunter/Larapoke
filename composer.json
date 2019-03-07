@@ -32,12 +32,6 @@
       "DarkGhostHunter\\Larapoke\\" : "src"
     }
   },
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/DarkGhostHunter/testbench-dusk.git"
-    }
-  ],
   "extra": {
     "laravel": {
       "providers": [

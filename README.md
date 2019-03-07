@@ -34,7 +34,7 @@ This amounts to **barely 800 bytes sent!**
 
 Larapoke script will detect if the CSRF session token is expired based on the last successful poke, and forcefully reload the page if there is Internet connection.
 
-This is done by detecting [when the browser or tab becomes active](https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API), or [when the device user becomes online again](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine/Online_and_offline_events).
+This is done by detecting [when the browser or tab becomes active](https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API), or [when the device user becomes online again](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine/onLine).
 
 This is handy in situations when the user laptop is put to sleep, or the phone loses signal. Because the session may expire during these moments, when the browser wakes up or the phone becomes online the page is reloaded to get the new CSRF token.
 

@@ -76,11 +76,11 @@ class LarapokeDirective
      */
     protected function parseConfig()
     {
-        $session = $this->config->get('session.lifetime') * 60;
+        $session = $this->config->get('session.lifetime') * 60 * 1000;
 
         return [
             'route' => $this->config->get('larapoke.poking.route'),
-            'interval' => (int)($session / $this->config->get('larapoke.times')) * 1000,
+            'interval' => (int)($session / $this->config->get('larapoke.times')),
             'lifetime' => $session,
         ];
     }

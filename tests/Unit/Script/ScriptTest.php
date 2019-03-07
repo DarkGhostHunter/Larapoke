@@ -82,8 +82,17 @@ class ScriptTest extends TestCase
 
         $script = (new LarapokeDirective($this->mockConfig, $this->mockView))->getRenderedScript();
 
-        $this->assertEquals($script['route'], 'test-larapoke-route');
-        $this->assertEquals($script['interval'], (int)(($this->sessionLifetime * 60) / $this->times) * 1000);
-        $this->assertEquals($script['lifetime'], $this->sessionLifetime * 60);
+        $this->assertEquals(
+            'test-larapoke-route',
+            $script['route']
+        );
+        $this->assertEquals(
+            (int)((($this->sessionLifetime * 60 * 1000) / $this->times)),
+            $script['interval']
+        );
+        $this->assertEquals(
+            $this->sessionLifetime * 60 * 1000,
+            $script['lifetime']
+        );
     }
 }

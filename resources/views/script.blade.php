@@ -3,6 +3,7 @@
     if (typeof larapoke_script === 'undefined') {
 
         let larapoke_date = new Date();
+
         const larapoke_script = () => {
             let ajax = new XMLHttpRequest;
 
@@ -27,8 +28,11 @@
 
         setInterval(() => { larapoke_script(); }, {{ $interval }} );
 
-        document.addEventListener('visibilitychange', larapoke_script_expired(), false);
-        window.addEventListener('online',  larapoke_script_expired());
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) { larapoke_script_expired(); }
+        }, false);
+
+        window.addEventListener('online', larapoke_script_expired(), false);
     }
     // end-larapoke-script
 </script>

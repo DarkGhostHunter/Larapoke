@@ -208,24 +208,19 @@ return [
 
 #### Domains
 
-In case you are using multiple domains (or subdomains), it may be convenient to allow the poking route available only for some of these.
-
-A classic example, is to make the poking available at `http://user.myapp.com/poke` but no `http://myapp.com/poke`.
+In case you are using different domains, or a subdomain, it may be convenient to allow this route only under a certain one instead of all domains. A classic example, is to make the poking available at `http://user.myapp.com/poke` but no `http://myapp.com/poke`.
 
 - `null` (default): the poke route will be only applied at the default root domain and **every route and domain** in the app.
-- `mydomain.com`: the poke route will be applied only to that domain, like so: `http://mydomain.com/poke`.
-- `array`: A poking route will be registered to every domain present in the array, and named along the domain name.
+- `mydomain.com`: the poke route will be applied only to that domain, like so: `http://mydomain.com/poke`. 
 
 ```php
 <?php 
 return [
     'poking' => [
-        'domain' => ['mysubdomain.myapp.com', 'test-app.com']
+        'domain' => 'mysubdomain.myapp.com'
     ],
 ];
 ```
-
-> When the `domain` value is not `null`, Larapoke will conveniently append the domain name to the route with a `.` dot.
 
 #### Middleware
 

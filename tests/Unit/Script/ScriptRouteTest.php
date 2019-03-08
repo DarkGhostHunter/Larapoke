@@ -142,7 +142,7 @@ class ScriptRouteTest extends TestCase
     public function testHasNamedRoute()
     {
         $this->assertTrue(
-            $this->app->make('router')->getRoutes()->hasNamedRoute('test-larapoke-name')
+            $this->app->make('router')->getRoutes()->hasNamedRoute('test-subdomain.app.com.test-larapoke-name')
         );
     }
 
@@ -151,10 +151,9 @@ class ScriptRouteTest extends TestCase
         /** @var \Illuminate\Routing\Router $router */
         $router = $this->app->make('router');
 
-        $route = $router->getRoutes()->getByName('test-larapoke-name');
+        $route = $router->getRoutes()->getByName('test-subdomain.app.com.test-larapoke-name');
 
         $this->assertTrue(in_array('testgroup', $route->getAction('middleware')));
         $this->assertTrue(in_array('web', $route->getAction('middleware')));
     }
-
 }

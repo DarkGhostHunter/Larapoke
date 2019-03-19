@@ -2,8 +2,8 @@
 
 namespace DarkGhostHunter\Larapoke\Http\Middleware;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 trait DetectsInjectableResponse
 {
@@ -13,7 +13,7 @@ trait DetectsInjectableResponse
      * @param \Illuminate\Http\Response|\Illuminate\Http\JsonResponse $response
      * @return bool
      */
-    protected function hasCsrf(Response $response)
+    protected function hasCsrf($response)
     {
         $content = $response->content();
 
@@ -30,10 +30,11 @@ trait DetectsInjectableResponse
      * Detect if the Request accepts HTML and is not an AJAX/PJAX Request
      *
      * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Response | \Illuminate\Http\JsonResponse $response
      * @return bool
      */
-    protected function isHtml(Request $request)
+    protected function isHtml(Request $request, $response)
     {
-        return $request->acceptsHtml() && !$request->ajax() && !$request->pjax();
+        return !$response instanceof JsonResponse && $request->acceptsHtml() && !$request->ajax() && !$request->pjax();
     }
 }

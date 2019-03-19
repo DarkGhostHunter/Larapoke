@@ -79,7 +79,7 @@ class LarapokeDirective
         $session = $this->config->get('session.lifetime') * 60 * 1000;
 
         return [
-            'route' => $this->config->get('larapoke.poking.route'),
+            'route' => '/'.trim($this->config->get('larapoke.poking.route'), '/'),
             'interval' => (int)($session / $this->config->get('larapoke.times')),
             'lifetime' => $session,
         ];

@@ -10,7 +10,7 @@ class LarapokeMiddleware extends BaseLarapokeMiddleware
     /**
      * The Config Repository for this Laravel application
      *
-     * @var Config
+     * @var bool
      */
     protected $modeIsMiddleware = false;
 
@@ -63,6 +63,6 @@ class LarapokeMiddleware extends BaseLarapokeMiddleware
         $injectAnyway = $detect !== 'detect';
 
         return $injectAnyway ||
-            !$injectAnyway && $this->isHtml($request) && $this->hasCsrf($response);
+            !$injectAnyway && $this->isHtml($request, $response) && $this->hasCsrf($response);
     }
 }

@@ -17,7 +17,7 @@ class LarapokeGlobalMiddleware extends BaseLarapokeMiddleware
     {
         $response = $next($request);
 
-        if ($response->isOk() && $this->isHtml($request) && $this->hasCsrf($response)) {
+        if ($response->isOk() && $this->isHtml($request, $response) && $this->hasCsrf($response)) {
             $this->injectScript($response);
         }
 

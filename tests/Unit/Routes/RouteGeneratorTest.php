@@ -24,7 +24,7 @@ class RouteGeneratorTest extends TestCase
         $this->config->shouldReceive('get')
             ->once()
             ->with('larapoke.poking.route')
-            ->andReturn('test-poke');
+            ->andReturn($route = 'test-poke');
         $this->config->shouldReceive('get')
             ->once()
             ->with('larapoke.poking.name')

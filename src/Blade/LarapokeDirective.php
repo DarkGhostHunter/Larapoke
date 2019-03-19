@@ -40,7 +40,7 @@ class LarapokeDirective
     /**
      * HTTP Request
      *
-     * @var Request
+     * @var Url
      */
     protected $url;
 
@@ -90,7 +90,7 @@ class LarapokeDirective
         $session = $this->config->get('session.lifetime') * 60 * 1000;
 
         return [
-            'route' => $this->url->to(trim($this->config->get('larapoke.poking.route'), '/')),
+            'route' => $this->url->to($this->config->get('larapoke.poking.route')),
             'interval' => (int)($session / $this->config->get('larapoke.times')),
             'lifetime' => $session,
         ];

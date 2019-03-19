@@ -3,6 +3,7 @@
 namespace Tests\Unit\Script;
 
 use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
+use Illuminate\Routing\UrlGenerator;
 use Orchestra\Testbench\TestCase;
 
 class ScriptTest extends TestCase
@@ -20,6 +21,9 @@ class ScriptTest extends TestCase
     /** @var \Illuminate\View\Factory & \Mockery\MockInterface */
     protected $mockView;
 
+    /** @var \Illuminate\Contracts\Routing\UrlGenerator & \Mockery\MockInterface */
+    protected $mockUrl;
+
     protected $sessionLifetime;
 
     protected $times;
@@ -29,6 +33,8 @@ class ScriptTest extends TestCase
         $this->mockConfig = \Mockery::mock(\Illuminate\Config\Repository::class);
 
         $this->mockView = \Mockery::mock(\Illuminate\View\Factory::class);
+
+        $this->mockUrl = \Mockery::spy(\Illuminate\Contracts\Routing\UrlGenerator::class);
 
         LarapokeDirective::setWasRendered(false);
     }
@@ -70,7 +76,7 @@ class ScriptTest extends TestCase
 
         $this->mockConfig->shouldReceive('get')
             ->with('larapoke.poking.route')
-            ->andReturn('test-larapoke-route');
+            ->andReturn($route = 'test-larapoke-route');
 
         $this->mockConfig->shouldReceive('get')
             ->with('larapoke.times')
@@ -80,10 +86,18 @@ class ScriptTest extends TestCase
             ->with('larapoke.view')
             ->andReturn('custom-larapoke-view');
 
-        $script = (new LarapokeDirective($this->mockConfig, $this->mockView))->getRenderedScript();
+
+        $this->mockUrl->shouldReceive('to')
+            ->once()
+            ->with($route)
+            ->andReturn('http://test-app.com/'.$route);
+
+        $script = (new LarapokeDirective(
+            $this->mockConfig, $this->mockView, $this->mockUrl)
+        )->getRenderedScript();
 
         $this->assertEquals(
-            '/test-larapoke-route',
+            'http://test-app.com/test-larapoke-route',
             $script['route']
         );
         $this->assertEquals(

@@ -179,6 +179,20 @@ The view receives three variables:
 
 This is the array of settings for the poking route which receives the script HTTP HEAD Request.
 
+```php
+<?php return [
+
+    // ...
+
+    'poking' => [
+        'route' => 'poke',
+        'name' => 'larapoke',
+        'domain' => null,
+        'middleware' => ['web'],
+    ]
+];
+```
+
 #### Route
 
 The route (relative to the root URL of your application) that will be using to receive the pokes.

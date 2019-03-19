@@ -42,7 +42,7 @@ This is handy in situations when the user laptop is put to sleep, or the phone l
 
 There are three ways to turn on Larapoke in your app. 
 
-* `auto` (hands-off default)
+* `auto` (easy hands-off default)
 * `middleware`
 * `manual`
 
@@ -56,12 +56,13 @@ LARAPOKE_MODE=auto
 
 Just install this package and *look at it go*. This will push a global middleware that will look into all your Responses content where:
 
-* an input where `csrf` token is present, or
-* a header where `csrf-token` is present.
+* the content is HTML,
+* an input where `csrf` token is present, 
+* or the meta tag `csrf-token`, are present.
 
-If there is any case-insensitive match, this will inject the Larapoke script, that will be in charge to keep the forms alive, just before the `</body>` tag.
+If there is any case-insensitive match, this will inject the Larapoke script in charge to keep the forms alive just before the `</body>` tag.
 
-> It's recommended to the other modes if your application has many routes or Responses with a lot of text.
+> It's recommended to use the other modes if your application has many routes or Responses with a lot of text.
 
 ### `middleware`
 
@@ -208,19 +209,22 @@ return [
 
 #### Domains
 
-In case you are using different domains, or a subdomain, it may be convenient to allow this route only under a certain one instead of all domains. A classic example, is to make the poking available at `http://user.myapp.com/poke` but no `http://myapp.com/poke`.
+In case you are using different domains of subdomains, it may be convenient to allow this route only under a certain one instead of all domains. A classic example is to make the poking available at `http://user.myapp.com/poke` but no `http://myapp.com/poke`.
 
-- `null` (default): the poke route will be only applied at the default root domain and **every route and domain** in the app.
-- `mydomain.com`: the poke route will be applied only to that domain, like so: `http://mydomain.com/poke`. 
+- `null` (default): the poke route will be applied in **every domain or subdomain**.
+- `mydomain.com`: the poke route will be applied only to that domain, like so: `http://mydomain.com/poke`.
+- `[array]`: the poke route will be available only on the domains inside the array.  
 
 ```php
 <?php 
 return [
     'poking' => [
-        'domain' => 'mysubdomain.myapp.com'
+        'domain' => ['mysubdomain.myapp.com', 'myotherdomain.com']
     ],
 ];
 ```
+
+> If you use an array, the route names will be conveniently names using the domain name as a prefix, like `myotherdomain.com-larapoke`.
 
 #### Middleware
 

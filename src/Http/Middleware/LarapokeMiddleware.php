@@ -63,6 +63,6 @@ class LarapokeMiddleware extends BaseLarapokeMiddleware
         $injectAnyway = $detect !== 'detect';
 
         return $injectAnyway ||
-            !$injectAnyway && $this->isHtml($request) && $this->hasCsrf($response);
+            !$injectAnyway && $this->isHtml($request, $response) && $this->hasCsrf($response);
     }
 }

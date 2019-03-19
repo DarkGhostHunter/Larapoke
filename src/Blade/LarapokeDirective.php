@@ -3,7 +3,9 @@
 namespace DarkGhostHunter\Larapoke\Blade;
 
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Routing\UrlGenerator as Url;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\Request;
 
 /**
  * Class LarapokeDirective
@@ -36,17 +38,26 @@ class LarapokeDirective
     protected $view;
 
     /**
+     * HTTP Request
+     *
+     * @var Request
+     */
+    protected $url;
+
+    /**
      * LarapokeDirective constructor.
      *
      * We use static variables son each Larapoke call doesn't get everything all again.
      *
      * @param Repository $config
      * @param Factory $view
+     * @param Url $url
      */
-    public function __construct(Repository $config, Factory $view)
+    public function __construct(Repository $config, Factory $view, Url $url)
     {
         $this->view = $view;
         $this->config = $config;
+        $this->url = $url;
     }
 
     /**
@@ -79,7 +90,7 @@ class LarapokeDirective
         $session = $this->config->get('session.lifetime') * 60 * 1000;
 
         return [
-            'route' => '/'.trim($this->config->get('larapoke.poking.route'), '/'),
+            'route' => $this->url->to(trim($this->config->get('larapoke.poking.route'), '/')),
             'interval' => (int)($session / $this->config->get('larapoke.times')),
             'lifetime' => $session,
         ];

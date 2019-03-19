@@ -72,6 +72,12 @@ class RouteGenerator
             return;
         }
 
+        // If its just one domain, we will register it and then exit
+        if (is_string($config['domain'])) {
+            $this->route($config)->name($config['domain'].'.'.$config['name'])->domain($config['domain']);
+            return;
+        }
+
         foreach (Arr::wrap($config['domain']) as $domain) {
             $this->route($config)->name($domain.'.'.$config['name'])->domain($domain);
         }

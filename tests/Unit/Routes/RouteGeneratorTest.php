@@ -84,6 +84,52 @@ class RouteGeneratorTest extends TestCase
 
     }
 
+    public function testSetOneDomainRoute()
+    {
+        $this->config->shouldReceive('get')
+            ->once()
+            ->with('larapoke.poking.domain')
+            ->andReturn('one');
+
+        $this->router->shouldReceive('match')
+            ->once()
+            ->with('head', 'test-poke')
+            ->andReturnSelf();
+        $this->router->shouldReceive('uses')
+            ->once()
+            ->with('DarkGhostHunter\Larapoke\Http\Controllers\LarapokeController')
+            ->andReturnSelf();
+        $this->router->shouldReceive('middleware')
+            ->once()
+            ->with('test-middleware')
+            ->andReturnSelf();
+        $this->router->shouldReceive('name')
+            ->once()
+            ->with("one.test-name")
+            ->andReturnSelf();
+
+        $generator = new RouteGenerator($this->router, $this->config);
+        $generator->setRoutes();
+
+        $this->config->shouldHaveReceived('get')
+            ->with('larapoke.poking.domain')
+            ->once();
+
+        $this->router->shouldHaveReceived('match')
+            ->with('head', 'test-poke')
+            ->once();
+        $this->router->shouldHaveReceived('uses')
+            ->with('DarkGhostHunter\Larapoke\Http\Controllers\LarapokeController')
+            ->once();
+        $this->router->shouldHaveReceived('middleware')
+            ->with('test-middleware')
+            ->once();
+        $this->router->shouldHaveReceived('name')
+            ->with('one.test-name')
+            ->once();
+
+    }
+
     public function testSetMultipleDomainRoutes()
     {
         $this->config->shouldReceive('get')

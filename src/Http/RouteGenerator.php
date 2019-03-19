@@ -11,7 +11,7 @@ class RouteGenerator
     /**
      * Configuration
      *
-     * @var array
+     * @var Config
      */
     protected $config;
 

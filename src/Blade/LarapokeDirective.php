@@ -24,7 +24,7 @@ class LarapokeDirective
     /**
      * The Config for the Blade Directive
      *
-     * @var array
+     * @var Repository
      */
     protected $config;
 

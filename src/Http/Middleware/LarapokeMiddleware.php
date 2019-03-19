@@ -10,7 +10,7 @@ class LarapokeMiddleware extends BaseLarapokeMiddleware
     /**
      * The Config Repository for this Laravel application
      *
-     * @var Config
+     * @var bool
      */
     protected $modeIsMiddleware = false;
 

@@ -20,7 +20,7 @@ trait DetectsInjectableResponse
             && $request->acceptsHtml()
             && ! $request->ajax()
             && ! $request->pjax()
-            && ! $request->exception;
+            && ! $response->exception;
     }
 
     /**

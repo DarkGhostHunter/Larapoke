@@ -16,7 +16,11 @@ trait DetectsInjectableResponse
      */
     protected function isHtml(Request $request, $response)
     {
-        return $response instanceof Response && $request->acceptsHtml() && !$request->ajax() && !$request->pjax();
+        return $response instanceof Response
+            && $request->acceptsHtml()
+            && ! $request->ajax()
+            && ! $request->pjax();
+            && ! $request->exception;
     }
 
     /**

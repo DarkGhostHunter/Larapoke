@@ -203,4 +203,11 @@ class ModeAutoTest extends TestCase
         $this->assertStringContainsString('end-larapoke-script', $response->content());
     }
 
+    public function testDoesntInjectsOnExceptionResponse()
+    {
+        $response = $this->get('non-existant-route-triggers-exception');
+
+        $response->assertDontSee('start-larapoke-script');
+    }
+
 }

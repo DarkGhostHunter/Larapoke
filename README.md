@@ -129,7 +129,7 @@ Don't worry if you use many `@larapoke` directives in your view, like in this ex
 For fine tuning, you can publish the `larapoke.php` config file.
 
 ```bash
-php artisan vendor:publish --provider="DarkGhostHunter\Larapoke\LarapokeServiceProvider"
+php artisan vendor:publish --provider=DarkGhostHunter\Larapoke\LarapokeServiceProvider
 ```
 
 Let's examine the configuration array for Larapoke:

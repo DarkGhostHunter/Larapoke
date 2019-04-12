@@ -5,6 +5,7 @@ namespace DarkGhostHunter\Larapoke\Http;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Arr;
+use DarkGhostHunter\Larapoke\Http\Controllers\LarapokeController;
 
 class RouteGenerator
 {
@@ -67,7 +68,7 @@ class RouteGenerator
         // When the "domain" config is null, we will just register a global route
         // that will respond to all domains. Otherwise, we will wrap the value
         // and traverse the array to register each to its own domain name.
-        if (is_null($config['domain'])) {
+        if ($config['domain'] === null) {
             $this->route($config)->name($config['name']);
             return;
         }
@@ -94,7 +95,7 @@ class RouteGenerator
         return $this->router
             ->match('head', $config['route'])
             ->middleware($config['middleware'])
-            ->uses('DarkGhostHunter\Larapoke\Http\Controllers\LarapokeController');
+            ->uses(LarapokeController::class);
     }
 
 }

@@ -29,7 +29,7 @@
         setInterval(() => { larapoke_script(); }, {{ $interval }} );
 
         document.addEventListener('visibilitychange', () => {
-            if (!document.hidden) { larapoke_script_expired(); }
+            if (document.visibilityState !== 'hidden') { larapoke_script_expired(); }
         }, false);
 
         window.addEventListener('online', larapoke_script_expired(), false);

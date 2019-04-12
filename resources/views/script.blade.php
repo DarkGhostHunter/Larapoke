@@ -22,7 +22,7 @@
 
         const larapoke_script_expired = () => {
             if (navigator.onLine && new Date() - larapoke_date >= {{ $interval }} + {{ $lifetime }}) {
-                location.reload(true);
+                window.location.reload();
             }
         };
 

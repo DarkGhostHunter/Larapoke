@@ -54,7 +54,7 @@ class ScriptTest extends TestCase
             ->shouldReceive('make')
             ->with('custom-larapoke-view', \Mockery::type('array'))
             ->andReturnUsing(function ($script, $config) {
-                return (new class ($config)
+                return new class ($config)
                 {
                     protected $config;
 
@@ -67,7 +67,7 @@ class ScriptTest extends TestCase
                     {
                         return $this->config;
                     }
-                });
+                };
             });
 
         $this->mockConfig->shouldReceive('get')

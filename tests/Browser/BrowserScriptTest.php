@@ -7,48 +7,67 @@ use Illuminate\Support\Str;
 use Tests\RegistersPackages;
 use Illuminate\Contracts\View\Factory;
 use Orchestra\Testbench\Dusk\TestCase;
+use Facebook\WebDriver\Chrome\ChromeOptions;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
+use Orchestra\Testbench\Dusk\Options as DuskOptions;
 
 class BrowserScriptTest extends TestCase
 {
     use RegistersPackages;
     use ScaffoldAuth;
 
-    protected function getEnvironmentSetUp($app)
+    protected function setUp() : void
     {
-        $this->app = $app;
+        $this->afterApplicationCreated(function () {
+            $this->app['config']->set('session.lifetime', 1);
+            $this->app['config']->set('session.expire_on_close', true);
+            $this->app['config']->set('app.key', Str::random(32));
 
-        $app['config']->set('session.lifetime', 1);
-        $app['config']->set('session.expire_on_close', true);
-        $app['config']->set('app.key', Str::random(32));
+            $this->scaffoldAuth($this->app);
 
-        $this->scaffoldAuth($app);
-
-        $app['router']->group(['middleware' => ['web']], function () use ($app) {
-            $app['router']->get('/register', function() {
-                return $this->app->make(Factory::class)->make('auth.register');
-            })->name('register');
-            $app['router']->post('/register', function() {
-                return \Request::all();
-            })->name('register');
-            $app['router']->get('/login', function() {
-                return $this->app->make(Factory::class)->make('auth.login');
-            })->name('login');
+            $this->app['router']->group(['middleware' => ['web']], function ()  {
+                $this->app['router']->get('register', function ()  {
+                    return $this->app->make(Factory::class)->make('auth.register');
+                })->name('register');
+                $this->app['router']->post('register', function () {
+                    return \Request::all();
+                })->name('register');
+                $this->app['router']->get('login', function ()  {
+                    return $this->app->make(Factory::class)->make('auth.login');
+                })->name('login');
+            });
         });
 
-        $this->app = null;
+        parent::setUp();
+    }
+
+    /**
+     * Create the RemoteWebDriver instance.
+     *
+     * @return \Facebook\WebDriver\Remote\RemoteWebDriver
+     */
+    protected function driver() : RemoteWebDriver
+    {
+        return RemoteWebDriver::create(
+            'http://localhost:9515',
+            DesiredCapabilities::chrome()->setCapability(
+                ChromeOptions::CAPABILITY,
+                DuskOptions::getChromeOptions()->addArguments(['--disable-gpu', '--headless'])
+            )
+        );
     }
 
     protected function tearDown() : void
     {
-        parent::tearDown();
-
         $this->cleanScaffold();
+
+        parent::tearDown();
     }
 
     public function testPokeWorks()
     {
-        $this->browse(function ($first, $second) {
-            /** @var \Laravel\Dusk\Browser $first */
+        $this->browse(function (\Laravel\Dusk\Browser $first, \Laravel\Dusk\Browser $second) {
             $first->visit('/register')
                 ->type('#name', 'test-email')
                 ->type('#email', 'email@email.com')

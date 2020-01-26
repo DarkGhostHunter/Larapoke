@@ -7,7 +7,6 @@ use Tests\RegistersPackages;
 use Illuminate\Http\JsonResponse;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Contracts\View\Factory;
-use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 
 class ModeMiddlewareTest extends TestCase
 {
@@ -24,8 +23,6 @@ class ModeMiddlewareTest extends TestCase
     protected function setUp() : void
     {
         parent::setUp();
-
-        LarapokeDirective::setWasRendered(false);
 
         /** @var \Illuminate\Routing\Router $router */
         $router = $this->app->make('router');
@@ -171,14 +168,15 @@ class ModeMiddlewareTest extends TestCase
         $this->assertStringNotContainsString('end-larapoke-script', $response->content());
     }
 
-    public function testInjectsForcefullyWithoutDetect()
+    public function testInjectsForcefullyWithoutDetectNothingWithMiddleware()
     {
         $response = $this->get('/nothing-with-middleware');
         $this->assertStringContainsString('start-larapoke-script', $response->content());
         $this->assertStringContainsString('end-larapoke-script', $response->content());
+    }
 
-        LarapokeDirective::setWasRendered(false);
-
+    public function testInjectsForcefullyWithoutDetectLogin()
+    {
         $response = $this->get('/login');
 
         $this->assertStringContainsString('start-larapoke-script', $response->content());

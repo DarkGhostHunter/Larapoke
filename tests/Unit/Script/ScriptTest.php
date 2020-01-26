@@ -30,17 +30,6 @@ class ScriptTest extends TestCase
         $this->mockView = \Mockery::mock(\Illuminate\View\Factory::class);
 
         $this->mockUrl = \Mockery::spy(\Illuminate\Contracts\Routing\UrlGenerator::class);
-
-        LarapokeDirective::setWasRendered(false);
-    }
-
-    public function testSetAndGetWasRendered()
-    {
-        $this->assertFalse(LarapokeDirective::getWasRendered());
-        LarapokeDirective::setWasRendered(true);
-        $this->assertTrue(LarapokeDirective::getWasRendered());
-        LarapokeDirective::setWasRendered(false);
-        $this->assertFalse(LarapokeDirective::getWasRendered());
     }
 
     public function testReceivesConfig()

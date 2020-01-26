@@ -8,7 +8,6 @@ use Illuminate\Http\JsonResponse;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\Compilers\BladeCompiler;
-use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 
 class ModeAutoTest extends TestCase
 {
@@ -25,8 +24,6 @@ class ModeAutoTest extends TestCase
     protected function setUp() : void
     {
         parent::setUp();
-
-        LarapokeDirective::setWasRendered(false);
 
         /** @var \Illuminate\Routing\Router $router */
         $router = $this->app->make('router');

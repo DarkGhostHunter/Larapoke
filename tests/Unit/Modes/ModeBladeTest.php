@@ -5,7 +5,6 @@ namespace Tests\Unit\Modes;
 use Tests\ScaffoldAuth;
 use Tests\RegistersPackages;
 use Orchestra\Testbench\TestCase;
-use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 
 class ModeBladeTest extends TestCase
 {
@@ -22,8 +21,6 @@ class ModeBladeTest extends TestCase
     protected function setUp() : void
     {
         parent::setUp();
-
-        LarapokeDirective::setWasRendered(false);
 
         /** @var \Illuminate\Routing\Router $router */
         $router = $this->app->make('router');

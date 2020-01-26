@@ -6,6 +6,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\View\Compilers\BladeCompiler;
 use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 use DarkGhostHunter\Larapoke\Http\Middleware\LarapokeMiddleware;
 use DarkGhostHunter\Larapoke\Http\Middleware\LarapokeGlobalMiddleware;
@@ -29,10 +30,13 @@ class LarapokeServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      *
+     * @param  \Illuminate\Routing\Router  $router
+     * @param  \Illuminate\Contracts\Config\Repository  $config
+     * @param  \Illuminate\View\Compilers\BladeCompiler  $blade
      * @return void
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function boot()
+    public function boot(Router $router, Repository $config, BladeCompiler $blade)
     {
         $this->loadRoutesFrom(__DIR__ . '/../routes/larapoke.php');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'larapoke');
@@ -45,9 +49,9 @@ class LarapokeServiceProvider extends ServiceProvider
             __DIR__ . '/../resources/views' => resource_path('views/vendor/larapoke'),
         ]);
 
-        $this->bootMiddleware();
+        $this->bootMiddleware($router, $config);
 
-        $this->bootBladeDirective();
+        $this->bootBladeDirective($blade);
     }
 
     /**
@@ -71,13 +75,12 @@ class LarapokeServiceProvider extends ServiceProvider
     /**
      * Registers the Blade Directive
      *
+     * @param  \Illuminate\View\Compilers\BladeCompiler  $blade
      * @return void
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    protected function bootBladeDirective()
+    protected function bootBladeDirective(BladeCompiler $blade)
     {
-        /** @var \Illuminate\View\Factory $view */
-        $this->app->make('blade.compiler')->directive('larapoke', function () {
+        $blade->directive('larapoke', function () {
             return $this->app->make(LarapokeDirective::class)->getRenderedScript();
         });
     }

@@ -11,8 +11,8 @@ Keep your forms alive, avoid `TokenMismatchException` by gently poking your Lara
 
 ## Requirements
 
-* PHP >= 7.1.3
-* Laravel 5.8
+* PHP 7.2 or later
+* Laravel 6.x
 
 > Check older releases for older Laravel versions.
 
@@ -62,6 +62,8 @@ Just install this package and *look at it go*. This will push a global middlewar
 
 If there is any case-insensitive match, this will inject the Larapoke script in charge to keep the forms alive just before the `</body>` tag.
 
+This mode won't inject the script on no-successful responses (anything not HTTP 2xx), like on errors or redirection.
+
 > It's recommended to use the other modes if your application has many routes or Responses with a lot of text.
 
 ### `middleware`
@@ -98,6 +100,8 @@ Route::prefix('informationForms')
         
     });
 ```
+
+This mode won't inject the script on no-successful responses (anything not HTTP 2xx), like on errors or redirection.
 
 ### `blade`
 
@@ -165,9 +169,9 @@ So, basically, `session lifetime / times = poking interval`.
 
 Larapoke uses its own Blade template to inject the script.
 
-Of course you can create your own script. You can point out a custom Blade template or override the default by creating a `views/vendor/larapoke/script.blade.php` file. The latter option doesn't need to publish the config file.
+You can use other view with the script or overriding the default by creating a `views/vendor/larapoke/script.blade.php` file. The latter option doesn't need to publish the config file.
 
-Why would you? Some people may want to change this to a custom script, maybe because they want to use a Javascript HTTP library, minify the response, make it compatible for older browsers, or even [create a custom Event](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events) when CSRF token expires.
+Why would you? Some people may want to change this because they want to use a Javascript HTTP library, minify the response, make it compatible for older browsers, or even [create a custom Event](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events) when CSRF token expires.
 
 The view receives three variables:
 

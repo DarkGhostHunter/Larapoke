@@ -2,8 +2,10 @@
 
 namespace DarkGhostHunter\Larapoke;
 
+use Illuminate\Routing\Router;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Config\Repository;
 use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 use DarkGhostHunter\Larapoke\Http\Middleware\LarapokeMiddleware;
 use DarkGhostHunter\Larapoke\Http\Middleware\LarapokeGlobalMiddleware;
@@ -17,9 +19,11 @@ class LarapokeServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/larapoke.php', 'larapoke');
+        $this->mergeConfigFrom(__DIR__ . '/../config/larapoke.php', 'larapoke');
 
-//        $this->app->singleton(LarapokeMiddleware::class);
+        $this->app->singleton(LarapokeDirective::class, function ($app) {
+            return new LarapokeDirective($app['config'], $app['view'], $app['url']);
+        });
     }
 
     /**
@@ -31,14 +35,14 @@ class LarapokeServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadRoutesFrom(__DIR__ . '/../routes/larapoke.php');
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'larapoke');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'larapoke');
 
         $this->publishes([
-            __DIR__.'/../config/larapoke.php' => config_path('larapoke.php'),
+            __DIR__ . '/../config/larapoke.php' => config_path('larapoke.php'),
         ], 'config');
 
         $this->publishes([
-            __DIR__.'/../resources/views' => resource_path('views/vendor/larapoke'),
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/larapoke'),
         ]);
 
         $this->bootMiddleware();
@@ -49,18 +53,17 @@ class LarapokeServiceProvider extends ServiceProvider
     /**
      * Registers (or push globally) the Middleware
      *
+     * @param  \Illuminate\Routing\Router  $router
+     * @param  \Illuminate\Contracts\Config\Repository  $config
      * @return void
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    protected function bootMiddleware()
+    protected function bootMiddleware(Router $router, Repository $config)
     {
-        /** @var \Illuminate\Routing\Router $router */
-        $router = $this->app->make('router');
-
         $router->aliasMiddleware('larapoke', LarapokeMiddleware::class);
 
         // If Larapoke is set to auto, push the global middleware.
-        if ($this->app->make('config')->get('larapoke.mode') === 'auto') {
+        if ($config->get('larapoke.mode') === 'auto') {
             $this->app->make(Kernel::class)->pushMiddleware(LarapokeGlobalMiddleware::class);
         }
     }
@@ -74,13 +77,8 @@ class LarapokeServiceProvider extends ServiceProvider
     protected function bootBladeDirective()
     {
         /** @var \Illuminate\View\Factory $view */
-        $view = $this->app->make('view');
-
-        $view->getEngineResolver()
-            ->resolve('blade')
-            ->getCompiler()
-            ->directive('larapoke', function () {
-                return $this->app->build(LarapokeDirective::class)->getRenderedScript();
-            });
+        $this->app->make('blade.compiler')->directive('larapoke', function () {
+            return $this->app->make(LarapokeDirective::class)->getRenderedScript();
+        });
     }
 }

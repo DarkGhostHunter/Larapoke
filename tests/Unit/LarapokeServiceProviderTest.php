@@ -21,8 +21,6 @@ class LarapokeServiceProviderTest extends TestCase
 
     protected function getEnvironmentSetUp($app)
     {
-
-        /** @var \Illuminate\Routing\Router $router */
         $router = $app->make('router');
 
         $router->group(['web'], function() use ($router) {

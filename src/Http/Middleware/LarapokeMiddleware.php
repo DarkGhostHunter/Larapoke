@@ -3,10 +3,12 @@
 namespace DarkGhostHunter\Larapoke\Http\Middleware;
 
 use Closure;
-use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Config\Repository;
 
-class LarapokeMiddleware extends BaseLarapokeMiddleware
+class LarapokeMiddleware
 {
+    use InjectsLarapokeScript;
+
     /**
      * The Config Repository for this Laravel application
      *
@@ -17,9 +19,9 @@ class LarapokeMiddleware extends BaseLarapokeMiddleware
     /**
      * LarapokeGlobalMiddleware constructor.
      *
-     * @param Config $config
+     * @param  Repository  $config
      */
-    public function __construct(Config $config)
+    public function __construct(Repository $config)
     {
         $this->modeIsMiddleware = $config->get('larapoke.mode') === 'middleware';
     }
@@ -27,20 +29,17 @@ class LarapokeMiddleware extends BaseLarapokeMiddleware
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure $next
-     * @param bool $detect
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @param  string  $detect
      * @return mixed
      */
-    public function handle($request, Closure $next, $detect = null)
+    public function handle($request, Closure $next, string $detect = null)
     {
         $response = $next($request);
 
         // Don't evaluate the response under "auto" or "blade" modes.
-        if ($this->modeIsMiddleware &&
-            $response->isOk() &&
-            $this->shouldInjectScript($request, $response, $detect)) {
-
+        if ($this->modeIsMiddleware && $this->shouldInjectScript($response, $detect)) {
             return $this->injectScript($response);
         }
 
@@ -50,19 +49,21 @@ class LarapokeMiddleware extends BaseLarapokeMiddleware
     /**
      * Determine if we should inject the script into the response.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Illuminate\Http\Response $response
-     * @param string|null $detect
+     * @param  \Illuminate\Http\Response  $response
+     * @param  string|null  $detect
      * @return bool
      */
-    public function shouldInjectScript($request, $response, $detect)
+    public function shouldInjectScript($response, $detect)
     {
+        if (! $response->isSuccessful()) {
+            return false;
+        }
+
         // Check first if the middleware has to detect if there is a CSRF token
         // before injecting the script in the response. When not detecting,
         // then we tell to inject the script anyway into the Response.
         $injectAnyway = $detect !== 'detect';
 
-        return $injectAnyway ||
-            !$injectAnyway && $this->isHtml($request, $response) && $this->hasCsrf($response);
+        return $injectAnyway || ($this->isNormalResponse($response) && $this->hasCsrf($response));
     }
 }

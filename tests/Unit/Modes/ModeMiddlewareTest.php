@@ -2,32 +2,23 @@
 
 namespace Tests\Unit\Modes;
 
-use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
-use Illuminate\Contracts\View\Factory;
+use Tests\ScaffoldAuth;
+use Tests\RegistersPackages;
 use Illuminate\Http\JsonResponse;
 use Orchestra\Testbench\TestCase;
+use Illuminate\Contracts\View\Factory;
+use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 
-class ModeAutoTest extends TestCase
+class ModeMiddlewareTest extends TestCase
 {
-    protected function getPackageProviders($app)
-    {
-        return [
-            'DarkGhostHunter\Larapoke\LarapokeServiceProvider'
-        ];
-    }
+    use RegistersPackages;
+    use ScaffoldAuth;
 
     protected function getEnvironmentSetUp($app)
     {
-        $this->app = $app;
+        $this->scaffoldAuth($app);
 
-        $this->artisan('make:auth', [
-            '--force' => true,
-            '--views' => true,
-        ])->run();
-
-        $this->app->make('config')->set('larapoke.mode', 'middleware');
-
-        $this->app = null;
+        $app->make('config')->set('larapoke.mode', 'middleware');
     }
 
     protected function setUp() : void
@@ -133,16 +124,7 @@ class ModeAutoTest extends TestCase
     {
         parent::tearDown();
 
-        $this->recurseRmdir(resource_path('views/auth'));
-        $this->recurseRmdir(resource_path('views/layouts'));
-    }
-
-    protected function recurseRmdir($dir) {
-        $files = array_diff(scandir($dir), array('.','..'));
-        foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? $this->recurseRmdir("$dir/$file") : unlink("$dir/$file");
-        }
-        return rmdir($dir);
+        $this->cleanScaffold();
     }
 
     public function testDoesntInjectsOnJson()

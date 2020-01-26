@@ -2,30 +2,21 @@
 
 namespace Tests\Unit\Modes;
 
-use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
+use Tests\ScaffoldAuth;
+use Tests\RegistersPackages;
 use Orchestra\Testbench\TestCase;
+use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 
 class ModeBladeTest extends TestCase
 {
-    protected function getPackageProviders($app)
-    {
-        return [
-            'DarkGhostHunter\Larapoke\LarapokeServiceProvider'
-        ];
-    }
+    use RegistersPackages;
+    use ScaffoldAuth;
 
     protected function getEnvironmentSetUp($app)
     {
-        $this->app = $app;
+        $this->scaffoldAuth($app);
 
-        $this->artisan('make:auth', [
-            '--force' => true,
-            '--views' => true,
-        ])->run();
-
-        $this->app->make('config')->set('larapoke.mode', 'blade');
-
-        $this->app = null;
+        $app->make('config')->set('larapoke.mode', 'blade');
     }
 
     protected function setUp() : void
@@ -37,19 +28,25 @@ class ModeBladeTest extends TestCase
         /** @var \Illuminate\Routing\Router $router */
         $router = $this->app->make('router');
 
-        $router->group(['middleware' => ['web']], function() use ($router) {
-            $router->get('/register', function() {
+        $router->group(['middleware' => ['web']], function () use ($router) {
+            $router->get('/register', function () {
                 return $this->app->make(\Illuminate\Contracts\View\Factory::class)->make('auth.register');
             })->name('register');
-            $router->get('/login', function() {
+            $router->get('/login', function () {
                 return $this->app->make(\Illuminate\Contracts\View\Factory::class)->make('auth.login');
             })->name('login');
-            $router->get('/home', function() {
+            $router->get('/home', function () {
                 return $this->app->make(\Illuminate\Contracts\View\Factory::class)->make('home');
             })->name('home');
-            $router->get('/form-only', function() { return $this->viewWithFormOnly(); })->name('form-only');
-            $router->get('/multiple-form', function() { return $this->viewMultipleForms(); })->name('multiple-form');
-            $router->get('/multiple-form-with-middleware', function() { return $this->viewMultipleForms(); })
+            $router->get('/form-only', function () {
+                return $this->viewWithFormOnly();
+            })->name('form-only');
+            $router->get('/multiple-form', function () {
+                return $this->viewMultipleForms();
+            })->name('multiple-form');
+            $router->get('/multiple-form-with-middleware', function () {
+                return $this->viewMultipleForms();
+            })
                 ->name('multiple-form-with-middleware')->middleware('larapoke');
         });
     }
@@ -129,15 +126,16 @@ class ModeBladeTest extends TestCase
     {
         parent::tearDown();
 
-        $this->recurseRmdir(resource_path('views/auth'));
-        $this->recurseRmdir(resource_path('views/layouts'));
+        $this->cleanScaffold();
     }
 
-    protected function recurseRmdir($dir) {
-        $files = array_diff(scandir($dir), array('.','..'));
+    protected function recurseRmdir($dir)
+    {
+        $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {
             (is_dir("$dir/$file")) ? $this->recurseRmdir("$dir/$file") : unlink("$dir/$file");
         }
+
         return rmdir($dir);
     }
 
@@ -176,6 +174,5 @@ class ModeBladeTest extends TestCase
         $this->assertTrue(substr_count($response->content(), 'start-larapoke-script') === 1);
         $this->assertTrue(substr_count($response->content(), 'end-larapoke-script') === 1);
     }
-
 
 }

@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Routes;
 
+use PHPUnit\Framework\TestCase;
 use DarkGhostHunter\Larapoke\Http\RouteGenerator;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 class RouteGeneratorTest extends TestCase
 {
@@ -16,7 +16,7 @@ class RouteGeneratorTest extends TestCase
     /** @var \Illuminate\Routing\Router & \Mockery\MockInterface */
     protected $router;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->config = \Mockery::spy(\Illuminate\Contracts\Config\Repository::class);
         $this->router = \Mockery::spy(\Illuminate\Routing\Router::class);
@@ -183,7 +183,7 @@ class RouteGeneratorTest extends TestCase
         }
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         parent::tearDown();
 

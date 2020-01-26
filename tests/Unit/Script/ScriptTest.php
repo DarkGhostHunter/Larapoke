@@ -2,18 +2,13 @@
 
 namespace Tests\Unit\Script;
 
-use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
-use Illuminate\Routing\UrlGenerator;
+use Tests\RegistersPackages;
 use Orchestra\Testbench\TestCase;
+use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 
 class ScriptTest extends TestCase
 {
-    protected function getPackageProviders($app)
-    {
-        return [
-            'DarkGhostHunter\Larapoke\LarapokeServiceProvider'
-        ];
-    }
+    use RegistersPackages;
 
     /** @var \Illuminate\Config\Repository & \Mockery\MockInterface */
     protected $mockConfig;

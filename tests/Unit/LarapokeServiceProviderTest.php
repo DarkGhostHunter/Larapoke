@@ -2,28 +2,22 @@
 
 namespace Tests\Unit;
 
+use Tests\RegistersPackages;
+use Orchestra\Testbench\TestCase;
+use Illuminate\Contracts\Http\Kernel;
 use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 use DarkGhostHunter\Larapoke\Http\Controllers\LarapokeController;
 use DarkGhostHunter\Larapoke\Http\Middleware\LarapokeGlobalMiddleware;
-use DarkGhostHunter\Larapoke\Http\Middleware\LarapokeMiddleware;
-use Illuminate\Contracts\Http\Kernel;
-use Orchestra\Testbench\TestCase;
 
 class LarapokeServiceProviderTest extends TestCase
 {
+    use RegistersPackages;
 
     protected $backupStaticAttributesBlacklist = [
         LarapokeDirective::class => [
             'view', 'config'
         ]
     ];
-
-    protected function getPackageProviders($app)
-    {
-        return [
-          'DarkGhostHunter\Larapoke\LarapokeServiceProvider'
-        ];
-    }
 
     protected function getEnvironmentSetUp($app)
     {

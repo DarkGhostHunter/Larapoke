@@ -2,18 +2,15 @@
 
 namespace Tests\Unit\Script;
 
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\JsonResponse;
+use Tests\ScaffoldAuth;
+use Tests\RegistersPackages;
 use Orchestra\Testbench\TestCase;
+use Illuminate\Contracts\View\Factory;
 
 class ScriptRouteTest extends TestCase
 {
-    protected function getPackageProviders($app)
-    {
-        return [
-            'DarkGhostHunter\Larapoke\LarapokeServiceProvider'
-        ];
-    }
+    use RegistersPackages;
+    use ScaffoldAuth;
 
     protected function resolveApplicationConfiguration($app)
     {
@@ -36,14 +33,7 @@ class ScriptRouteTest extends TestCase
 
     protected function getEnvironmentSetUp($app)
     {
-        $this->app = $app;
-
-        $this->artisan('make:auth', [
-            '--force' => true,
-            '--views' => true,
-        ])->run();
-
-        $this->app = null;
+        $this->scaffoldAuth($app);
 
         $app->bind('testgroup', function() {
             return new class() {
@@ -59,16 +49,7 @@ class ScriptRouteTest extends TestCase
     {
         parent::tearDown();
 
-        $this->recurseRmdir(resource_path('views/auth'));
-        $this->recurseRmdir(resource_path('views/layouts'));
-    }
-
-    protected function recurseRmdir($dir) {
-        $files = array_diff(scandir($dir), array('.','..'));
-        foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? $this->recurseRmdir("$dir/$file") : unlink("$dir/$file");
-        }
-        return rmdir($dir);
+        $this->cleanScaffold();
     }
 
     protected function setUp() : void

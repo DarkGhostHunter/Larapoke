@@ -2,19 +2,16 @@
 
 namespace Tests\Browser;
 
-use Illuminate\Contracts\View\Factory;
+use Tests\ScaffoldAuth;
 use Illuminate\Support\Str;
+use Tests\RegistersPackages;
+use Illuminate\Contracts\View\Factory;
 use Orchestra\Testbench\Dusk\TestCase;
 
 class BrowserScriptTest extends TestCase
 {
-
-    protected function getPackageProviders($app)
-    {
-        return [
-            'DarkGhostHunter\Larapoke\LarapokeServiceProvider',
-        ];
-    }
+    use RegistersPackages;
+    use ScaffoldAuth;
 
     protected function getEnvironmentSetUp($app)
     {
@@ -24,7 +21,7 @@ class BrowserScriptTest extends TestCase
         $app['config']->set('session.expire_on_close', true);
         $app['config']->set('app.key', Str::random(32));
 
-        $this->artisan('make:auth --force --views')->run();
+        $this->scaffoldAuth($app);
 
         $app['router']->group(['middleware' => ['web']], function () use ($app) {
             $app['router']->get('/register', function() {
@@ -45,22 +42,11 @@ class BrowserScriptTest extends TestCase
     {
         parent::tearDown();
 
-        $this->recurseRmdir(resource_path('views/auth'));
-        $this->recurseRmdir(resource_path('views/layouts'));
-    }
-
-    protected function recurseRmdir($dir) {
-        $files = array_diff(scandir($dir), array('.','..'));
-        foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? $this->recurseRmdir("$dir/$file") : unlink("$dir/$file");
-        }
-        return rmdir($dir);
+        $this->cleanScaffold();
     }
 
     public function testPokeWorks()
     {
-        $this->markTestSkipped('Until Orchestra Testbench for Laravel Dusk is updated, we cannot do browser tests');
-
         $this->browse(function ($first, $second) {
             /** @var \Laravel\Dusk\Browser $first */
             $first->visit('/register')

@@ -2,14 +2,26 @@
 
 namespace DarkGhostHunter\Larapoke;
 
-use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
-use DarkGhostHunter\Larapoke\Http\Middleware\LarapokeGlobalMiddleware;
-use DarkGhostHunter\Larapoke\Http\Middleware\LarapokeMiddleware;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;
+use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
+use DarkGhostHunter\Larapoke\Http\Middleware\LarapokeMiddleware;
+use DarkGhostHunter\Larapoke\Http\Middleware\LarapokeGlobalMiddleware;
 
 class LarapokeServiceProvider extends ServiceProvider
 {
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->mergeConfigFrom(__DIR__.'/../config/larapoke.php', 'larapoke');
+
+//        $this->app->singleton(LarapokeMiddleware::class);
+    }
+
     /**
      * Bootstrap any application services.
      *
@@ -70,15 +82,5 @@ class LarapokeServiceProvider extends ServiceProvider
             ->directive('larapoke', function () {
                 return $this->app->build(LarapokeDirective::class)->getRenderedScript();
             });
-    }
-
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->mergeConfigFrom(__DIR__.'/../config/larapoke.php', 'larapoke');
     }
 }

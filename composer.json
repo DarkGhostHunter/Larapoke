@@ -20,7 +20,6 @@
     "require-dev": {
         "laravel/ui" : "1.*",
         "orchestra/testbench": "4.*",
-        "orchestra/testbench-dusk": "4.*"
     },
     "autoload-dev": {
         "psr-4": {

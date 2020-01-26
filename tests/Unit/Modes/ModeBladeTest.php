@@ -4,6 +4,7 @@ namespace Tests\Unit\Modes;
 
 use Tests\ScaffoldAuth;
 use Tests\RegistersPackages;
+use Illuminate\Http\Response;
 use Orchestra\Testbench\TestCase;
 
 class ModeBladeTest extends TestCase
@@ -45,6 +46,7 @@ class ModeBladeTest extends TestCase
                 return $this->viewMultipleForms();
             })
                 ->name('multiple-form-with-middleware')->middleware('larapoke');
+            $router->get('/not-successful', function () { return new Response('</body>', 400); });
         });
     }
 
@@ -148,6 +150,13 @@ class ModeBladeTest extends TestCase
         $response = $this->get('/form-only');
         $this->assertStringContainsString('start-larapoke-script', $response->content());
         $this->assertStringContainsString('end-larapoke-script', $response->content());
+    }
+
+    public function testDoesntInjectOnNotSuccessful()
+    {
+        $response = $this->get('/not-successful');
+        $this->assertStringNotContainsString('start-larapoke-script', $response->content());
+        $this->assertStringNotContainsString('end-larapoke-script', $response->content());
     }
 
     public function testInjectsOnceOnMultipleForms()

@@ -4,6 +4,7 @@ namespace Tests\Unit\Modes;
 
 use Tests\ScaffoldAuth;
 use Tests\RegistersPackages;
+use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Contracts\View\Factory;
@@ -53,6 +54,7 @@ class ModeAutoTest extends TestCase
             $router->get('/nothing', function () {
                 return $this->viewWithNothing();
             })->name('nothing');
+            $router->get('/not-successful', function () { return new Response('</body>', 400); });
         });
     }
 
@@ -139,6 +141,13 @@ class ModeAutoTest extends TestCase
         $response = $this->get('/form-only', [
             'X-Requested-With' => 'XMLHttpRequest',
         ]);
+        $this->assertStringNotContainsString('start-larapoke-script', $response->content());
+        $this->assertStringNotContainsString('end-larapoke-script', $response->content());
+    }
+
+    public function testDoesntInjectOnNotSuccessful()
+    {
+        $response = $this->get('/not-successful');
         $this->assertStringNotContainsString('start-larapoke-script', $response->content());
         $this->assertStringNotContainsString('end-larapoke-script', $response->content());
     }

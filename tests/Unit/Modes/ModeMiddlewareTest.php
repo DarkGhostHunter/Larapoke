@@ -4,6 +4,7 @@ namespace Tests\Unit\Modes;
 
 use Tests\ScaffoldAuth;
 use Tests\RegistersPackages;
+use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Contracts\View\Factory;
@@ -50,6 +51,7 @@ class ModeMiddlewareTest extends TestCase
                 ->name('nothing')->middleware('larapoke');
             $router->get('/no-middleware', function() { return $this->viewWithNothing(); })
                 ->name('nothing');
+            $router->get('/not-successful', function () { return new Response('</body>', 400); })->middleware('larapoke:detect');
         });
     }
 
@@ -140,6 +142,13 @@ class ModeMiddlewareTest extends TestCase
         $this->assertStringNotContainsString('end-larapoke-script', $response->content());
     }
 
+    public function testDoesntInjectOnNotSuccessful()
+    {
+        $response = $this->get('/not-successful');
+        $this->assertStringNotContainsString('start-larapoke-script', $response->content());
+        $this->assertStringNotContainsString('end-larapoke-script', $response->content());
+    }
+
     public function testDetectsHeaderOrForm()
     {
         $response = $this->get('/register');
@@ -178,7 +187,6 @@ class ModeMiddlewareTest extends TestCase
     public function testInjectsForcefullyWithoutDetectLogin()
     {
         $response = $this->get('/login');
-
         $this->assertStringContainsString('start-larapoke-script', $response->content());
         $this->assertStringContainsString('end-larapoke-script', $response->content());
     }

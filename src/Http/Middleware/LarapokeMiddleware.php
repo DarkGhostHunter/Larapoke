@@ -3,6 +3,7 @@
 namespace DarkGhostHunter\Larapoke\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Contracts\Config\Repository;
 
 class LarapokeMiddleware
@@ -39,7 +40,7 @@ class LarapokeMiddleware
         $response = $next($request);
 
         // Don't evaluate the response under "auto" or "blade" modes.
-        if ($this->modeIsMiddleware && $this->shouldInjectScript($response, $detect)) {
+        if ($this->shouldInjectScript($request, $response, $detect)) {
             return $this->injectScript($response);
         }
 
@@ -49,13 +50,14 @@ class LarapokeMiddleware
     /**
      * Determine if we should inject the script into the response.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Http\Response  $response
      * @param  string|null  $detect
      * @return bool
      */
-    public function shouldInjectScript($response, $detect)
+    public function shouldInjectScript(Request $request, $response, $detect)
     {
-        if (! $response->isSuccessful()) {
+        if (! $this->modeIsMiddleware) {
             return false;
         }
 
@@ -64,6 +66,6 @@ class LarapokeMiddleware
         // then we tell to inject the script anyway into the Response.
         $injectAnyway = $detect !== 'detect';
 
-        return $injectAnyway || ($this->isNormalResponse($response) && $this->hasCsrf($response));
+        return $injectAnyway || $this->isInjectable($request, $response);
     }
 }

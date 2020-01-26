@@ -60,16 +60,6 @@ class LarapokeDirective
     }
 
     /**
-     * Returns if the script was already rendered
-     *
-     * @return bool
-     */
-    public function getWasRendered()
-    {
-        return $this->wasRendered;
-    }
-
-    /**
      * Parse de Config and save it
      *
      * @return array

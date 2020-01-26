@@ -18,9 +18,9 @@ trait DetectsInjectableResponse
     {
         return $response instanceof Response
             && $request->acceptsHtml()
+            && $response->isSuccessful()
             && ! $request->ajax()
-            && ! $request->pjax()
-            && ! $response->exception;
+            && ! $request->pjax();
     }
 
     /**

@@ -2,39 +2,28 @@
 
 namespace Tests\Unit\Modes;
 
-use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
-use Illuminate\Contracts\View\Factory;
+use Tests\ScaffoldAuth;
+use Tests\RegistersPackages;
+use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Orchestra\Testbench\TestCase;
+use Illuminate\Contracts\View\Factory;
 
-class ModeAutoTest extends TestCase
+class ModeMiddlewareTest extends TestCase
 {
-    protected function getPackageProviders($app)
-    {
-        return [
-            'DarkGhostHunter\Larapoke\LarapokeServiceProvider'
-        ];
-    }
+    use RegistersPackages;
+    use ScaffoldAuth;
 
     protected function getEnvironmentSetUp($app)
     {
-        $this->app = $app;
+        $this->scaffoldAuth($app);
 
-        $this->artisan('make:auth', [
-            '--force' => true,
-            '--views' => true,
-        ])->run();
-
-        $this->app->make('config')->set('larapoke.mode', 'middleware');
-
-        $this->app = null;
+        $app->make('config')->set('larapoke.mode', 'middleware');
     }
 
     protected function setUp() : void
     {
         parent::setUp();
-
-        LarapokeDirective::setWasRendered(false);
 
         /** @var \Illuminate\Routing\Router $router */
         $router = $this->app->make('router');
@@ -62,6 +51,7 @@ class ModeAutoTest extends TestCase
                 ->name('nothing')->middleware('larapoke');
             $router->get('/no-middleware', function() { return $this->viewWithNothing(); })
                 ->name('nothing');
+            $router->get('/not-successful', function () { return new Response('</body>', 400); })->middleware('larapoke:detect');
         });
     }
 
@@ -133,16 +123,7 @@ class ModeAutoTest extends TestCase
     {
         parent::tearDown();
 
-        $this->recurseRmdir(resource_path('views/auth'));
-        $this->recurseRmdir(resource_path('views/layouts'));
-    }
-
-    protected function recurseRmdir($dir) {
-        $files = array_diff(scandir($dir), array('.','..'));
-        foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? $this->recurseRmdir("$dir/$file") : unlink("$dir/$file");
-        }
-        return rmdir($dir);
+        $this->cleanScaffold();
     }
 
     public function testDoesntInjectsOnJson()
@@ -157,6 +138,13 @@ class ModeAutoTest extends TestCase
     public function testNoScriptOnNoMiddleware()
     {
         $response = $this->get('/no-middleware');
+        $this->assertStringNotContainsString('start-larapoke-script', $response->content());
+        $this->assertStringNotContainsString('end-larapoke-script', $response->content());
+    }
+
+    public function testDoesntInjectOnNotSuccessful()
+    {
+        $response = $this->get('/not-successful');
         $this->assertStringNotContainsString('start-larapoke-script', $response->content());
         $this->assertStringNotContainsString('end-larapoke-script', $response->content());
     }
@@ -189,18 +177,25 @@ class ModeAutoTest extends TestCase
         $this->assertStringNotContainsString('end-larapoke-script', $response->content());
     }
 
-    public function testInjectsForcefullyWithoutDetect()
+    public function testInjectsForcefullyWithoutDetectNothingWithMiddleware()
     {
         $response = $this->get('/nothing-with-middleware');
         $this->assertStringContainsString('start-larapoke-script', $response->content());
         $this->assertStringContainsString('end-larapoke-script', $response->content());
+    }
 
-        LarapokeDirective::setWasRendered(false);
-
+    public function testInjectsForcefullyWithoutDetectLogin()
+    {
         $response = $this->get('/login');
-
         $this->assertStringContainsString('start-larapoke-script', $response->content());
         $this->assertStringContainsString('end-larapoke-script', $response->content());
+    }
+
+    public function testDoesntInjectsOnExceptionResponse()
+    {
+        $response = $this->get('non-existant-route-triggers-exception');
+
+        $response->assertDontSee('start-larapoke-script');
     }
 
 }

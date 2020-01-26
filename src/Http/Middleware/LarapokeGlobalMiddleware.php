@@ -4,8 +4,10 @@ namespace DarkGhostHunter\Larapoke\Http\Middleware;
 
 use Closure;
 
-class LarapokeGlobalMiddleware extends BaseLarapokeMiddleware
+class LarapokeGlobalMiddleware
 {
+    use InjectsLarapokeScript;
+
     /**
      * Handle the incoming request.
      *
@@ -17,7 +19,7 @@ class LarapokeGlobalMiddleware extends BaseLarapokeMiddleware
     {
         $response = $next($request);
 
-        if ($response->isOk() && $this->isHtml($request, $response) && $this->hasCsrf($response)) {
+        if ($this->isInjectable($request, $response)) {
             $this->injectScript($response);
         }
 

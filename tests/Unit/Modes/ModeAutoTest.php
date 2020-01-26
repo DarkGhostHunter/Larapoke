@@ -2,63 +2,59 @@
 
 namespace Tests\Unit\Modes;
 
-use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
-use Illuminate\Contracts\View\Factory;
+use Tests\ScaffoldAuth;
+use Tests\RegistersPackages;
+use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
-use Illuminate\View\Compilers\BladeCompiler;
 use Orchestra\Testbench\TestCase;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\Compilers\BladeCompiler;
 
-class ModeMiddlewareTest extends TestCase
+class ModeAutoTest extends TestCase
 {
-    protected function getPackageProviders($app)
-    {
-        return [
-            'DarkGhostHunter\Larapoke\LarapokeServiceProvider'
-        ];
-    }
+    use RegistersPackages;
+    use ScaffoldAuth;
 
     protected function getEnvironmentSetUp($app)
     {
-        $this->app = $app;
+        $this->scaffoldAuth($app);
 
-        $this->artisan('make:auth', [
-            '--force' => true,
-            '--views' => true,
-        ])->run();
-
-        $this->app->make('config')->set('larapoke.mode', 'auto');
-
-        $this->app = null;
+        $app['config']->set('larapoke.mode', 'auto');
     }
 
     protected function setUp() : void
     {
         parent::setUp();
 
-        LarapokeDirective::setWasRendered(false);
-
         /** @var \Illuminate\Routing\Router $router */
         $router = $this->app->make('router');
 
-        $router->group(['middleware' => ['web']], function() use ($router) {
-            $router->get('/register', function() {
+        $router->group(['middleware' => ['web']], function () use ($router) {
+            $router->get('/register', function () {
                 return $this->app->make(Factory::class)->make('auth.register');
             })->name('register');
-            $router->get('/login', function() {
+            $router->get('/login', function () {
                 return $this->app->make(Factory::class)->make('auth.login');
             })->name('login');
-            $router->get('/home', function() {
+            $router->get('/home', function () {
                 return $this->app->make(Factory::class)->make('home');
             })->name('home');
             $router->get('/json', function () {
                 return $this->app->make(JsonResponse::class, [
                     'example' => 'name="_token"',
-                    'csrf' => 'name="csrf-token"',
+                    'csrf'    => 'name="csrf-token"',
                 ]);
             });
-            $router->get('/form-only', function() { return $this->viewWithFormOnly(); })->name('form-only');
-            $router->get('/header-only', function() { return $this->viewWithHeaderOnly(); })->name('header-only');
-            $router->get('/nothing', function() { return $this->viewWithNothing(); })->name('nothing');
+            $router->get('/form-only', function () {
+                return $this->viewWithFormOnly();
+            })->name('form-only');
+            $router->get('/header-only', function () {
+                return $this->viewWithHeaderOnly();
+            })->name('header-only');
+            $router->get('/nothing', function () {
+                return $this->viewWithNothing();
+            })->name('nothing');
+            $router->get('/not-successful', function () { return new Response('</body>', 400); });
         });
     }
 
@@ -130,16 +126,7 @@ class ModeMiddlewareTest extends TestCase
     {
         parent::tearDown();
 
-        $this->recurseRmdir(resource_path('views/auth'));
-        $this->recurseRmdir(resource_path('views/layouts'));
-    }
-
-    protected function recurseRmdir($dir) {
-        $files = array_diff(scandir($dir), array('.','..'));
-        foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? $this->recurseRmdir("$dir/$file") : unlink("$dir/$file");
-        }
-        return rmdir($dir);
+        $this->cleanScaffold();
     }
 
     public function testDoesntInjectsOnJson()
@@ -154,6 +141,13 @@ class ModeMiddlewareTest extends TestCase
         $response = $this->get('/form-only', [
             'X-Requested-With' => 'XMLHttpRequest',
         ]);
+        $this->assertStringNotContainsString('start-larapoke-script', $response->content());
+        $this->assertStringNotContainsString('end-larapoke-script', $response->content());
+    }
+
+    public function testDoesntInjectOnNotSuccessful()
+    {
+        $response = $this->get('/not-successful');
         $this->assertStringNotContainsString('start-larapoke-script', $response->content());
         $this->assertStringNotContainsString('end-larapoke-script', $response->content());
     }

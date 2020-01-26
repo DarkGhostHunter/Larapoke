@@ -2,18 +2,13 @@
 
 namespace Tests\Unit\Script;
 
-use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
-use Illuminate\Routing\UrlGenerator;
+use Tests\RegistersPackages;
 use Orchestra\Testbench\TestCase;
+use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 
 class ScriptTest extends TestCase
 {
-    protected function getPackageProviders($app)
-    {
-        return [
-            'DarkGhostHunter\Larapoke\LarapokeServiceProvider'
-        ];
-    }
+    use RegistersPackages;
 
     /** @var \Illuminate\Config\Repository & \Mockery\MockInterface */
     protected $mockConfig;
@@ -35,17 +30,6 @@ class ScriptTest extends TestCase
         $this->mockView = \Mockery::mock(\Illuminate\View\Factory::class);
 
         $this->mockUrl = \Mockery::spy(\Illuminate\Contracts\Routing\UrlGenerator::class);
-
-        LarapokeDirective::setWasRendered(false);
-    }
-
-    public function testSetAndGetWasRendered()
-    {
-        $this->assertFalse(LarapokeDirective::getWasRendered());
-        LarapokeDirective::setWasRendered(true);
-        $this->assertTrue(LarapokeDirective::getWasRendered());
-        LarapokeDirective::setWasRendered(false);
-        $this->assertFalse(LarapokeDirective::getWasRendered());
     }
 
     public function testReceivesConfig()
@@ -54,7 +38,7 @@ class ScriptTest extends TestCase
             ->shouldReceive('make')
             ->with('custom-larapoke-view', \Mockery::type('array'))
             ->andReturnUsing(function ($script, $config) {
-                return (new class ($config)
+                return new class ($config)
                 {
                     protected $config;
 
@@ -67,7 +51,7 @@ class ScriptTest extends TestCase
                     {
                         return $this->config;
                     }
-                });
+                };
             });
 
         $this->mockConfig->shouldReceive('get')

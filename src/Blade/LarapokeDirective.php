@@ -2,10 +2,9 @@
 
 namespace DarkGhostHunter\Larapoke\Blade;
 
-use Illuminate\Contracts\Config\Repository;
-use Illuminate\Contracts\Routing\UrlGenerator as Url;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Routing\UrlGenerator;
 
 /**
  * Class LarapokeDirective
@@ -17,14 +16,14 @@ use Illuminate\Http\Request;
 class LarapokeDirective
 {
     /**
-     * If the directive was rendered
+     * If the directive was rendered already.
      *
      * @var bool
      */
-    protected static $wasRendered = false;
+    protected $wasRendered = false;
 
     /**
-     * The Config for the Blade Directive
+     * The configuration for the Blade Directive
      *
      * @var Repository
      */
@@ -38,9 +37,9 @@ class LarapokeDirective
     protected $view;
 
     /**
-     * HTTP Request
+     * URL Generator
      *
-     * @var Url
+     * @var UrlGenerator
      */
     protected $url;
 
@@ -49,35 +48,15 @@ class LarapokeDirective
      *
      * We use static variables son each Larapoke call doesn't get everything all again.
      *
-     * @param Repository $config
-     * @param Factory $view
-     * @param Url $url
+     * @param  \Illuminate\Contracts\Config\Repository  $config
+     * @param  \Illuminate\Contracts\View\Factory  $view
+     * @param  \Illuminate\Contracts\Routing\UrlGenerator  $url
      */
-    public function __construct(Repository $config, Factory $view, Url $url)
+    public function __construct(Repository $config, Factory $view, UrlGenerator $url)
     {
         $this->view = $view;
         $this->config = $config;
         $this->url = $url;
-    }
-
-    /**
-     * Returns if the script was already rendered
-     *
-     * @return bool
-     */
-    public static function getWasRendered()
-    {
-        return self::$wasRendered;
-    }
-
-    /**
-     * Set if the script should render again
-     *
-     * @param bool $wasRendered
-     */
-    public static function setWasRendered(bool $wasRendered)
-    {
-        self::$wasRendered = $wasRendered;
     }
 
     /**
@@ -90,7 +69,7 @@ class LarapokeDirective
         $session = $this->config->get('session.lifetime') * 60 * 1000;
 
         return [
-            'route' => $this->url->to($this->config->get('larapoke.poking.route')),
+            'route'    => $this->url->to($this->config->get('larapoke.poking.route')),
             'interval' => (int)($session / $this->config->get('larapoke.times')),
             'lifetime' => $session,
         ];
@@ -103,12 +82,9 @@ class LarapokeDirective
      */
     public function renderScript()
     {
-        self::$wasRendered = true;
+        $this->wasRendered = true;
 
-        return $this->view->make(
-            $this->config->get('larapoke.view'),
-            $this->parseConfig()
-        )->render();
+        return $this->view->make($this->config->get('larapoke.view'), $this->parseConfig())->render();
     }
 
     /**
@@ -121,6 +97,6 @@ class LarapokeDirective
         // Rendering the script isn't costly, but doing it multiple times in page
         // is redundant. When called multiple times, we will render the first
         // instance, and return an empty string on the subsequent renders.
-        return static::$wasRendered ? '' : $this->renderScript();
+        return $this->wasRendered ? '' : $this->renderScript();
     }
 }

@@ -22,14 +22,14 @@
 
         const larapoke_script_expired = () => {
             if (navigator.onLine && new Date() - larapoke_date >= {{ $interval }} + {{ $lifetime }}) {
-                location.reload(true);
+                window.location.reload();
             }
         };
 
         setInterval(() => { larapoke_script(); }, {{ $interval }} );
 
         document.addEventListener('visibilitychange', () => {
-            if (!document.hidden) { larapoke_script_expired(); }
+            if (document.visibilityState !== 'hidden') { larapoke_script_expired(); }
         }, false);
 
         window.addEventListener('online', larapoke_script_expired(), false);

@@ -3,7 +3,8 @@ Paul Hanaoka - Unslash (UL) #C0zDWAPFT9A](https://images.unsplash.com/photo-1496
 
 [![Latest Stable Version](https://poser.pugx.org/darkghosthunter/larapoke/v/stable)](https://packagist.org/packages/darkghosthunter/larapoke) [![License](https://poser.pugx.org/darkghosthunter/larapoke/license)](https://packagist.org/packages/darkghosthunter/larapoke)
 ![](https://img.shields.io/packagist/php-v/darkghosthunter/larapoke.svg)
- [![Build Status](https://travis-ci.com/DarkGhostHunter/Larapoke.svg?branch=master)](https://travis-ci.com/DarkGhostHunter/Larapoke) [![Coverage Status](https://coveralls.io/repos/github/DarkGhostHunter/Larapoke/badge.svg?branch=master)](https://coveralls.io/github/DarkGhostHunter/Larapoke?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/d755d23efe1f1835761e/maintainability)](https://codeclimate.com/github/DarkGhostHunter/Larapoke/maintainability)
+ ![](https://github.com/DarkGhostHunter/Larapoke/workflows/PHP%20Composer/badge.svg)
+ [![Coverage Status](https://coveralls.io/repos/github/DarkGhostHunter/Larapoke/badge.svg?branch=master)](https://coveralls.io/github/DarkGhostHunter/Larapoke?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/d755d23efe1f1835761e/maintainability)](https://codeclimate.com/github/DarkGhostHunter/Larapoke/maintainability)
 
 # Larapoke
 
@@ -12,7 +13,7 @@ Keep your forms alive, avoid `TokenMismatchException` by gently poking your Lara
 ## Requirements
 
 * PHP 7.2 or later
-* Laravel 6.x
+* Laravel 6 or Laravel 7
 
 > Check older releases for older Laravel versions.
 

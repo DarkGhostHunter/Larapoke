@@ -12,14 +12,14 @@
     ],
     "require": {
         "php": "^7.2",
-        "illuminate/routing": "6.*",
-        "illuminate/support": "6.*",
-        "illuminate/view": "6.*",
-        "illuminate/http": "6.*"
+        "illuminate/routing": "^6.0||^7.0",
+        "illuminate/support": "^6.0||^7.0",
+        "illuminate/view": "^6.0||^7.0",
+        "illuminate/http": "^6.0||^7.0"
     },
     "require-dev": {
-        "laravel/ui" : "1.*",
-        "orchestra/testbench": "4.*"
+        "laravel/ui" : "^1.0||^2.0",
+        "orchestra/testbench": "^4.1||^5.0"
     },
     "autoload-dev": {
         "psr-4": {
@@ -37,5 +37,13 @@
                 "DarkGhostHunter\\Larapoke\\LarapokeServiceProvider"
             ]
         }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
     }
 }

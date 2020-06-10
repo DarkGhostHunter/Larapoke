@@ -4,7 +4,7 @@ Paul Hanaoka - Unslash (UL) #C0zDWAPFT9A](https://images.unsplash.com/photo-1496
 [![Latest Stable Version](https://poser.pugx.org/darkghosthunter/larapoke/v/stable)](https://packagist.org/packages/darkghosthunter/larapoke) [![License](https://poser.pugx.org/darkghosthunter/larapoke/license)](https://packagist.org/packages/darkghosthunter/larapoke)
 ![](https://img.shields.io/packagist/php-v/darkghosthunter/larapoke.svg)
  ![](https://github.com/DarkGhostHunter/Larapoke/workflows/PHP%20Composer/badge.svg)
- [![Coverage Status](https://coveralls.io/repos/github/DarkGhostHunter/Larapoke/badge.svg?branch=master)](https://coveralls.io/github/DarkGhostHunter/Larapoke?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/d755d23efe1f1835761e/maintainability)](https://codeclimate.com/github/DarkGhostHunter/Larapoke/maintainability)
+ [![Coverage Status](https://coveralls.io/repos/github/DarkGhostHunter/Larapoke/badge.svg?branch=master)](https://coveralls.io/github/DarkGhostHunter/Larapoke?branch=master)
 
 # Larapoke
 

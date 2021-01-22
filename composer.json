@@ -18,7 +18,9 @@
         "illuminate/http": "^6.0||^7.0||^8.0"
     },
     "require-dev": {
-        "laravel/ui" : "^1.0||^2.0||^3.0",
+        "fakerphp/faker": "^1.9.1",
+        "phpunit/phpunit": "^9.3",
+        "laravel/ui": "^1.0||^2.0||^3.0",
         "orchestra/testbench": "^4.1||^5.0||^6.0"
     },
     "autoload-dev": {

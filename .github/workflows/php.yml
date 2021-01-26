@@ -14,7 +14,7 @@ jobs:
         php: [8.0, 7.4, 7.3, 7.2.15]
         laravel: [8.*, 7.*, 6.*]
         dependency-version: [prefer-lowest, prefer-stable]
-        phpunit: '^8.5|^9.3'
+        phpunit: [8.5|^9.3]
         include:
           - laravel: 8.*
             testbench: 6.*

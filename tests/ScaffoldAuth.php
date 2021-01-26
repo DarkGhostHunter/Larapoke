@@ -13,6 +13,8 @@ trait ScaffoldAuth
      */
     protected function scaffoldAuth($app)
     {
+	$this->cleanScaffold();
+
         mkdir($app->basePath('routes'), 0777, true);
         mkdir($app->resourcePath('sass'), 0777, true);
         mkdir($app->resourcePath('js'), 0777, true);

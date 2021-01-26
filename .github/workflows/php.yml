@@ -14,6 +14,7 @@ jobs:
         php: [8.0, 7.4, 7.3, 7.2.15]
         laravel: [8.*, 7.*, 6.*]
         dependency-version: [prefer-lowest, prefer-stable]
+        phpunit: '^8.5|^9.3'
         include:
           - laravel: 8.*
             testbench: 6.*
@@ -21,6 +22,10 @@ jobs:
             testbench: 5.*
           - laravel: 6.*
             testbench: ^4.1
+          - php: 8.0
+            phpunit: ^9.3
+          - php: 7.2
+            phpunit: ^8.5
         exclude:
           - php: 7.2.15
             laravel: 8.*
@@ -29,7 +34,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -39,7 +44,7 @@ jobs:
         coverage: xdebug
 
     - name: Cache dependencies
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: ~/.composer/cache/files
         key: ${{ runner.os }}-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
@@ -47,7 +52,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-progress --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "phpunit/phpunit:${{ matrix.phpunit }}" --no-progress --no-update
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-progress
 
     - name: Run Tests

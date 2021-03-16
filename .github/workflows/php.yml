@@ -54,4 +54,4 @@ jobs:
         COVERALLS_SERVICE_NAME: github
       run: |
         composer require --dev php-coveralls/php-coveralls
-        vendor/bin/php-coveralls build/logs/clover.xml
+        vendor/bin/php-coveralls

@@ -13,17 +13,16 @@ jobs:
       matrix:
         php: [8.0, 7.4]
         laravel: [8.*, 7.*]
-        phpunit: '^8.5|^9.3'
         dependency-version: [prefer-lowest, prefer-stable]
         include:
           - laravel: 8.*
             testbench: 6.*
           - laravel: 7.*
             testbench: 5.*
+          - php: 7.4
+            phpunit: ^8.5|^9.3
           - php: 8.0
             phpunit: ^9.3
-          - php: 7.2
-            phpunit: ^8.5
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 

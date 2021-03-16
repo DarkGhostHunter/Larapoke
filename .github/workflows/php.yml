@@ -53,6 +53,5 @@ jobs:
         COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         COVERALLS_SERVICE_NAME: github
       run: |
-        rm -rf composer.* vendor/
-        composer require cedx/coveralls
-        vendor/bin/coveralls build/logs/clover.xml
+        composer require --dev php-coveralls/php-coveralls
+        vendor/bin/php-coveralls build/logs/clover.xml

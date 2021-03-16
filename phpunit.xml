@@ -17,5 +17,7 @@
     <env name="APP_ENV" value="testing"/>
     <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
   </php>
-  <logging/>
+  <logging>
+    <log type="coverage-clover" target="build/logs/clover.xml"/>
+  </logging>
 </phpunit>

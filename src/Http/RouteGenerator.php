@@ -2,10 +2,10 @@
 
 namespace DarkGhostHunter\Larapoke\Http;
 
-use Illuminate\Support\Arr;
-use Illuminate\Routing\Router;
-use Illuminate\Contracts\Config\Repository as Config;
 use DarkGhostHunter\Larapoke\Http\Controllers\LarapokeController;
+use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Arr;
 
 class RouteGenerator
 {
@@ -92,10 +92,13 @@ class RouteGenerator
      */
     protected function route(array $config)
     {
-        return $this->router
+        $route = $this->router
             ->match('head', $config['route'])
-            ->uses(LarapokeController::class)
-            ->middleware($config['middleware']);
+            ->uses(LarapokeController::class);
+
+        $route->middleware($config['middleware']);
+
+        return $route;
     }
 
 }

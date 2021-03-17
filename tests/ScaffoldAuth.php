@@ -3,6 +3,8 @@
 namespace Tests;
 
 use Illuminate\Contracts\Console\Kernel;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 trait ScaffoldAuth
 {
@@ -13,6 +15,8 @@ trait ScaffoldAuth
      */
     protected function scaffoldAuth($app)
     {
+	$this->cleanScaffold();
+
         mkdir($app->basePath('routes'), 0777, true);
         mkdir($app->resourcePath('sass'), 0777, true);
         mkdir($app->resourcePath('js'), 0777, true);
@@ -43,10 +47,18 @@ trait ScaffoldAuth
      */
     protected function cleanDir($dir)
     {
-        $files = array_diff(scandir($dir), array('.','..'));
-        foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? $this->{__FUNCTION__}("$dir/$file") : unlink("$dir/$file");
+	if (! is_dir($dir)) {
+            return true;
         }
+
+        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+
+        foreach ($files as $fileinfo) {
+            $fileinfo->isDir()
+                ? rmdir($fileinfo->getRealPath())
+                : unlink($fileinfo->getRealPath());
+        }
+
         return rmdir($dir);
     }
 }

@@ -12,10 +12,10 @@ Keep your forms alive, avoid `TokenMismatchException` by gently poking your Lara
 
 ## Requirements
 
-* PHP 7.2 or later
-* Laravel 6 or Laravel 7
+* PHP 7.4/8.0
+* Laravel 7.x/8.x
 
-> Check older releases for older Laravel versions.
+> For older versions support, consider helping by sponsoring or donating.
 
 ## Installation
 

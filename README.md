@@ -12,8 +12,8 @@ Keep your forms alive, avoid `TokenMismatchException` by gently poking your Lara
 
 ## Requirements
 
-* PHP 8.0
-* Laravel 8
+* PHP 7.4/8.0
+* Laravel 7.x/8.x
 
 > For older versions support, consider helping by sponsoring or donating.
 

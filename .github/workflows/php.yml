@@ -13,7 +13,7 @@ jobs:
       matrix:
         php: [8.0]
         laravel: [8.*]
-        dependency-version: [prefer-lowest, prefer-stable]
+        dependency-version: [prefer-stable]
         include:
           - laravel: 8.*
             testbench: 6.*
@@ -52,5 +52,5 @@ jobs:
           COVERALLS_SERVICE_NAME: github
         run: |
           rm -rf composer.* vendor/
-          composer require cedx/coveralls
-          vendor/bin/coveralls build/logs/clover.xml
+          composer require php-coveralls/php-coveralls
+          vendor/bin/php-coveralls

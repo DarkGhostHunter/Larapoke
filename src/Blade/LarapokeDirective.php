@@ -2,9 +2,9 @@
 
 namespace DarkGhostHunter\Larapoke\Blade;
 
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Routing\UrlGenerator;
+use Illuminate\Contracts\View\Factory;
 
 /**
  * Class LarapokeDirective
@@ -20,28 +20,28 @@ class LarapokeDirective
      *
      * @var bool
      */
-    protected $wasRendered = false;
+    protected bool $wasRendered = false;
 
     /**
      * The configuration for the Blade Directive
      *
      * @var Repository
      */
-    protected $config;
+    protected Repository $config;
 
     /**
      * The View Factory Instance
      *
      * @var Factory
      */
-    protected $view;
+    protected Factory $view;
 
     /**
      * URL Generator
      *
      * @var UrlGenerator
      */
-    protected $url;
+    protected UrlGenerator $url;
 
     /**
      * LarapokeDirective constructor.
@@ -64,7 +64,7 @@ class LarapokeDirective
      *
      * @return array
      */
-    protected function parseConfig()
+    protected function parseConfig(): array
     {
         $session = $this->config->get('session.lifetime') * 60 * 1000;
 
@@ -78,9 +78,9 @@ class LarapokeDirective
     /**
      * Renders the scripts using the Larapoke configuration
      *
-     * @return string
+     * @return array
      */
-    public function renderScript()
+    public function renderScript(): string
     {
         $this->wasRendered = true;
 
@@ -92,7 +92,7 @@ class LarapokeDirective
      *
      * @return string
      */
-    public function getRenderedScript()
+    public function getRenderedScript(): string
     {
         // Rendering the script isn't costly, but doing it multiple times in page
         // is redundant. When called multiple times, we will render the first

@@ -11,7 +11,7 @@ class LarapokeGlobalMiddleware
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request|\Illuminate\Foundation\Http\FormRequest $request
      * @param \Closure $next
      * @return mixed
      */

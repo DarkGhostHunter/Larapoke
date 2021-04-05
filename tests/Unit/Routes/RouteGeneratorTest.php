@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Routes;
 
-use PHPUnit\Framework\TestCase;
 use DarkGhostHunter\Larapoke\Http\RouteGenerator;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
 class RouteGeneratorTest extends TestCase
 {
@@ -38,12 +38,10 @@ class RouteGeneratorTest extends TestCase
 
     public function testSetGlobalRoute()
     {
-
         $this->config->shouldReceive('get')
             ->once()
             ->with('larapoke.poking.domain')
             ->andReturn(null);
-
 
         $this->router->shouldReceive('match')
             ->once()

@@ -12,7 +12,7 @@ class LarapokeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function __invoke()
+    public function __invoke(): Response
     {
         return new Response('', Response::HTTP_NO_CONTENT);
     }

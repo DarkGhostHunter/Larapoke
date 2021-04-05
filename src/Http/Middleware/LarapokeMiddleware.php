@@ -3,8 +3,8 @@
 namespace DarkGhostHunter\Larapoke\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Http\Request;
 
 class LarapokeMiddleware
 {
@@ -15,7 +15,7 @@ class LarapokeMiddleware
      *
      * @var bool
      */
-    protected $modeIsMiddleware = false;
+    protected bool $modeIsMiddleware = false;
 
     /**
      * LarapokeGlobalMiddleware constructor.
@@ -30,9 +30,10 @@ class LarapokeMiddleware
     /**
      * Handle the incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request|\Illuminate\Foundation\Http\FormRequest $request
      * @param  \Closure  $next
-     * @param  string  $detect
+     * @param  string|null  $detect
+     *
      * @return mixed
      */
     public function handle($request, Closure $next, string $detect = null)
@@ -50,12 +51,13 @@ class LarapokeMiddleware
     /**
      * Determine if we should inject the script into the response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Http\Response  $response
+     * @param  \Illuminate\Http\Request|\Illuminate\Foundation\Http\FormRequest  $request
+     * @param  \Illuminate\Http\Response|\Illuminate\Http\JsonResponse  $response
      * @param  string|null  $detect
+     *
      * @return bool
      */
-    public function shouldInjectScript(Request $request, $response, $detect)
+    public function shouldInjectScript(Request $request, $response, ?string $detect): bool
     {
         if (! $this->modeIsMiddleware) {
             return false;

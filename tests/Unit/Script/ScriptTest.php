@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Script;
 
-use Tests\RegistersPackages;
-use Orchestra\Testbench\TestCase;
 use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
+use Orchestra\Testbench\TestCase;
+use Tests\RegistersPackages;
 
 class ScriptTest extends TestCase
 {
@@ -49,7 +49,7 @@ class ScriptTest extends TestCase
 
                     public function render()
                     {
-                        return $this->config;
+                        return json_encode($this->config);
                     }
                 };
             });
@@ -82,15 +82,15 @@ class ScriptTest extends TestCase
 
         $this->assertEquals(
             'http://test-app.com/test-larapoke-route',
-            $script['route']
+            json_decode($script, true)['route']
         );
         $this->assertEquals(
             (int)((($this->sessionLifetime * 60 * 1000) / $this->times)),
-            $script['interval']
+            json_decode($script, true)['interval']
         );
         $this->assertEquals(
             $this->sessionLifetime * 60 * 1000,
-            $script['lifetime']
+            json_decode($script, true)['lifetime']
         );
     }
 }

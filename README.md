@@ -1,5 +1,4 @@
-![
-Paul Hanaoka - Unslash (UL) #C0zDWAPFT9A](https://images.unsplash.com/photo-1496284427489-f59461d8a8e6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1280&h=400&q=80)
+![Paul Hanaoka - Unslash (UL) #C0zDWAPFT9A](https://images.unsplash.com/photo-1496284427489-f59461d8a8e6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1280&h=400&q=80)
 
 [![Latest Stable Version](https://poser.pugx.org/darkghosthunter/larapoke/v/stable)](https://packagist.org/packages/darkghosthunter/larapoke) [![License](https://poser.pugx.org/darkghosthunter/larapoke/license)](https://packagist.org/packages/darkghosthunter/larapoke)
 ![](https://img.shields.io/packagist/php-v/darkghosthunter/larapoke.svg)
@@ -37,7 +36,7 @@ Larapoke script will detect if the CSRF session token is expired based on the la
 
 This is done by detecting [when the browser or tab becomes active](https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API), or [when the device user becomes online again](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine/onLine).
 
-This is handy in situations when the user laptop is put to sleep, or the phone loses signal. Because the session may expire during these moments, when the browser wakes up or the phone becomes online the page is reloaded to get the new CSRF token.
+This is handy in situations when the user laptop is put to sleep, or the phone loses signal. Because the session may expire during these moments, when the browser wakes up or the phone becomes online, the page is reloaded to get the new CSRF token.
 
 ## Usage
 
@@ -75,8 +74,9 @@ This will disable the global middleware, allowing you to use the `larapoke` midd
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RegisterController;
 
-Route::get('register', 'Auth\RegisterController@showForm')
+Route::get('register', [RegisterController::class, 'showForm'])
     ->middleware('larapoke');
 ```
 
@@ -88,17 +88,17 @@ Since a route group may contain routes without any form, you can add the `detect
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RegisterController;
 
 Route::prefix('informationForms')
     ->middleware('larapoke:detect')
     ->group(function () {
         
         // Here it will be injected
-        Route::get('register', 'Auth\RegisterController@showForm');
+        Route::get('register', [RegisterController::class, 'showForm']);
         
         // But not here since there is no form
-        Route::get('status', 'Auth\RegisterController@status');
-        
+        Route::get('status', [RegisterController::class, 'status']);
     });
 ```
 
@@ -127,11 +127,11 @@ The `blade` method allows you to use the `@larapoke` directive to inject the scr
 </form>
 ```
 
-Don't worry if you use many `@larapoke` directives in your view, like in this example. The script will be injected itself only on the first occurrence instead of multiple times. Even then, if you forcefully render the script manually in multiple places, the subsequent scripts won't do nothing.
+Don't worry if you use many `@larapoke` directives in your view, like in this example. The script will be injected itself only on the first occurrence instead of multiple times. Even then, if you forcefully render the script manually in multiple places, the subsequent scripts will not do anything.
 
 ## Configuration
 
-For fine tuning, you can publish the `larapoke.php` config file.
+For fine-tuning, you can publish the `larapoke.php` config file.
 
 ```bash
 php artisan vendor:publish --provider=DarkGhostHunter\Larapoke\LarapokeServiceProvider
@@ -165,6 +165,8 @@ For example, if our session lifetime is the default of 120 minutes:
 - 6 times will poke the application each 20 minutes, and so on...
 
 So, basically, `session lifetime / times = poking interval`.
+
+You should raise it if you expect your users to have a lot of doing nothing and may quit at any given time.
 
 ### Script View
 

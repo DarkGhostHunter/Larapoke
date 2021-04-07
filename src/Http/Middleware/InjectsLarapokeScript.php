@@ -2,9 +2,9 @@
 
 namespace DarkGhostHunter\Larapoke\Http\Middleware;
 
+use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use DarkGhostHunter\Larapoke\Blade\LarapokeDirective;
 
 trait InjectsLarapokeScript
 {
@@ -15,7 +15,7 @@ trait InjectsLarapokeScript
      * @param  \Illuminate\Http\Response | \Illuminate\Http\JsonResponse  $response
      * @return bool
      */
-    protected function isInjectable(Request $request, $response)
+    protected function isInjectable(Request $request, $response): bool
     {
         return $response->isSuccessful()
             && $this->isNormalResponse($response)

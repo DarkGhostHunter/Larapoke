@@ -14,14 +14,14 @@ class RouteGenerator
      *
      * @var Config
      */
-    protected $config;
+    protected Config $config;
 
     /**
      * Application instance
      *
      * @var Router
      */
-    protected $router;
+    protected Router $router;
 
     /**
      * GenerateRoutes constructor.
@@ -40,7 +40,7 @@ class RouteGenerator
      *
      * @return array
      */
-    protected function parseConfig()
+    protected function parseConfig(): array
     {
         $configs = array_flip([
             'route',

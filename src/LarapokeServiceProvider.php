@@ -41,17 +41,14 @@ class LarapokeServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/../routes/larapoke.php');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'larapoke');
 
-        $this->publishes([
-            __DIR__ . '/../config/larapoke.php' => config_path('larapoke.php'),
-        ], 'config');
-
-        $this->publishes([
-            __DIR__ . '/../resources/views' => resource_path('views/vendor/larapoke'),
-        ]);
-
         $this->bootMiddleware($router, $config);
 
         $this->bootBladeDirective($blade);
+
+        if ($this->app->runningInConsole()) {
+            $this->publishes([__DIR__ . '/../config/larapoke.php' => config_path('larapoke.php')], 'config');
+            $this->publishes([__DIR__ . '/../resources/views' => resource_path('views/vendor/larapoke')], 'views');
+        }
     }
 
     /**
@@ -81,7 +78,7 @@ class LarapokeServiceProvider extends ServiceProvider
     protected function bootBladeDirective(BladeCompiler $blade): void
     {
         $blade->directive('larapoke', function () {
-            return $this->app->make(LarapokeDirective::class)->getRenderedScript();
+            return $this->app->make(LarapokeDirective::class)->toHtml();
         });
     }
 }

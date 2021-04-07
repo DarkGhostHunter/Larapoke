@@ -5,6 +5,7 @@ namespace DarkGhostHunter\Larapoke\Http\Middleware;
 use Closure;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class LarapokeMiddleware
 {
@@ -30,18 +31,18 @@ class LarapokeMiddleware
     /**
      * Handle the incoming request.
      *
-     * @param  \Illuminate\Http\Request|\Illuminate\Foundation\Http\FormRequest $request
+     * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
      * @param  string|null  $detect
      *
      * @return mixed
      */
-    public function handle($request, Closure $next, string $detect = null)
+    public function handle(Request $request, Closure $next, string $detect = null) : mixed
     {
         $response = $next($request);
 
-        // Don't evaluate the response under "auto" or "blade" modes.
-        if ($this->shouldInjectScript($request, $response, $detect)) {
+        // Don't evaluate the response under "json", "auto" or "blade" modes.
+        if ($response instanceof Response && $this->shouldInjectScript($request, $response, $detect)) {
             return $this->injectScript($response);
         }
 
@@ -51,13 +52,13 @@ class LarapokeMiddleware
     /**
      * Determine if we should inject the script into the response.
      *
-     * @param  \Illuminate\Http\Request|\Illuminate\Foundation\Http\FormRequest  $request
-     * @param  \Illuminate\Http\Response|\Illuminate\Http\JsonResponse  $response
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Response  $response
      * @param  string|null  $detect
      *
      * @return bool
      */
-    public function shouldInjectScript(Request $request, $response, ?string $detect): bool
+    public function shouldInjectScript(Request $request, Response $response, ?string $detect): bool
     {
         if (! $this->modeIsMiddleware) {
             return false;

@@ -4,24 +4,11 @@ namespace DarkGhostHunter\Larapoke\Blade;
 
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Routing\UrlGenerator;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\Factory;
 
-/**
- * Class LarapokeDirective
- *
- * This directive is in charge of creating the script
- *
- * @package DarkGhostHunter\Larapoke\Blade
- */
-class LarapokeDirective
+class LarapokeDirective implements Htmlable
 {
-    /**
-     * If the directive was rendered already.
-     *
-     * @var bool
-     */
-    protected bool $wasRendered = false;
-
     /**
      * The configuration for the Blade Directive
      *
@@ -78,25 +65,10 @@ class LarapokeDirective
     /**
      * Renders the scripts using the Larapoke configuration
      *
-     * @return array
-     */
-    public function renderScript(): string
-    {
-        $this->wasRendered = true;
-
-        return $this->view->make($this->config->get('larapoke.view'), $this->parseConfig())->render();
-    }
-
-    /**
-     * Returns the rendered script
-     *
      * @return string
      */
-    public function getRenderedScript(): string
+    public function toHtml(): string
     {
-        // Rendering the script isn't costly, but doing it multiple times in page
-        // is redundant. When called multiple times, we will render the first
-        // instance, and return an empty string on the subsequent renders.
-        return $this->wasRendered ? '' : $this->renderScript();
+        return $this->view->make($this->config->get('larapoke.view'), $this->parseConfig())->render();
     }
 }

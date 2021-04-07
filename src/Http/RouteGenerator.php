@@ -3,7 +3,7 @@
 namespace DarkGhostHunter\Larapoke\Http;
 
 use DarkGhostHunter\Larapoke\Http\Controllers\LarapokeController;
-use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Arr;
 
@@ -12,9 +12,9 @@ class RouteGenerator
     /**
      * Configuration
      *
-     * @var Config
+     * @var Repository
      */
-    protected Config $config;
+    protected Repository $config;
 
     /**
      * Application instance
@@ -27,9 +27,9 @@ class RouteGenerator
      * GenerateRoutes constructor.
      *
      * @param Router $router
-     * @param Config $config
+     * @param  Repository  $config
      */
-    public function __construct(Router $router, Config $config)
+    public function __construct(Router $router, Repository $config)
     {
         $this->config = $config;
         $this->router = $router;

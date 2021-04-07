@@ -37,7 +37,7 @@ class LarapokeMiddleware
      *
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, string $detect = null) : mixed
+    public function handle(Request $request, Closure $next, string $detect = null)
     {
         $response = $next($request);
 

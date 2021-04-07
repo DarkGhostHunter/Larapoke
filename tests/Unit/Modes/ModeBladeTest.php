@@ -170,15 +170,4 @@ class ModeBladeTest extends TestCase
         $this->assertEquals(2, substr_count($response->content(), 'end-larapoke-script'));
     }
 
-    public function testInjectsOnceOnMiddlewareAndMultipleForms()
-    {
-        $response = $this->get('/multiple-form-with-middleware');
-
-        $this->assertStringContainsString('start-larapoke-script', $response->content());
-        $this->assertStringContainsString('end-larapoke-script', $response->content());
-
-        $this->assertEquals(2, substr_count($response->content(), 'start-larapoke-script'));
-        $this->assertEquals(2, substr_count($response->content(), 'end-larapoke-script'));
-    }
-
 }

@@ -1,9 +1,6 @@
 ![Paul Hanaoka - Unslash (UL) #C0zDWAPFT9A](https://images.unsplash.com/photo-1496284427489-f59461d8a8e6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1280&h=400&q=80)
 
-[![Latest Stable Version](https://poser.pugx.org/darkghosthunter/larapoke/v/stable)](https://packagist.org/packages/darkghosthunter/larapoke) [![License](https://poser.pugx.org/darkghosthunter/larapoke/license)](https://packagist.org/packages/darkghosthunter/larapoke)
-![](https://img.shields.io/packagist/php-v/darkghosthunter/larapoke.svg)
- ![](https://github.com/DarkGhostHunter/Larapoke/workflows/PHP%20Composer/badge.svg)
- [![Coverage Status](https://coveralls.io/repos/github/DarkGhostHunter/Larapoke/badge.svg?branch=master)](https://coveralls.io/github/DarkGhostHunter/Larapoke?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/darkghosthunter/larapoke/v/stable)](https://packagist.org/packages/darkghosthunter/larapoke) [![License](https://poser.pugx.org/darkghosthunter/larapoke/license)](https://packagist.org/packages/darkghosthunter/larapoke) ![](https://img.shields.io/packagist/php-v/darkghosthunter/larapoke.svg)  ![](https://github.com/DarkGhostHunter/Larapoke/workflows/PHP%20Composer/badge.svg)  [![Coverage Status](https://coveralls.io/repos/github/DarkGhostHunter/Larapoke/badge.svg?branch=master)](https://coveralls.io/github/DarkGhostHunter/Larapoke?branch=master) [![Laravel Octane Compatible](https://img.shields.io/badge/Laravel%20Octane-Compatible-success?style=flat&logo=laravel)](https://github.com/laravel/octane)
 
 # Larapoke
 
@@ -11,8 +8,8 @@ Keep your forms alive, avoid `TokenMismatchException` by gently poking your Lara
 
 ## Requirements
 
-* PHP 7.4/8.0
-* Laravel 7.x/8.x
+* PHP 7.4, 8.0 or later.
+* Laravel 7.x, 8.x or later.
 
 > For older versions support, consider helping by sponsoring or donating.
 
@@ -26,7 +23,7 @@ composer require darkghosthunter/larapoke
 
 ## How does it work?
 
-Larapoke pokes your App with a HTTP HEAD request to the `/poke` route at given intervals. In return, while your application renews the session lifetime, it sends an `HTTP 204` status code, which is an OK Response without body. 
+Larapoke pokes your App with an HTTP `HEAD` request to the `/poke` route at given intervals. In return, while your application renews the session lifetime, it sends an `HTTP 204` status code, which is an OK Response without body. 
 
 This amounts to **barely 800 bytes sent!**
 
@@ -113,7 +110,7 @@ The `blade` method allows you to use the `@larapoke` directive to inject the scr
 <h2>Try to Login:</h2>
 <form action="/login" method="post">
     @csrf
-    @larapoke
+    @larapoke <!-- This script will run -->
     <input type="text" name="username" required>
     <input type="password" name="password" required>
     <button type="submit">Log me in!</button>
@@ -121,13 +118,13 @@ The `blade` method allows you to use the `@larapoke` directive to inject the scr
 <h2>Or reset your password</h2>
 <form action="/password" method="post">
     @csrf
-    @larapoke
+    @larapoke <!-- This won't -->
     <input type="email" name="email" required>
     <button type="submit">I forgot my password!</button>
 </form>
 ```
 
-Don't worry if you use many `@larapoke` directives in your view, like in this example. The script will be injected itself only on the first occurrence instead of multiple times. Even then, if you forcefully render the script manually in multiple places, the subsequent scripts will not do anything.
+Don't worry if you use many `@larapoke` directives in your view, like in this example. The script can be injected multiple times, but only the first script will run and poke the site.
 
 ## Configuration
 

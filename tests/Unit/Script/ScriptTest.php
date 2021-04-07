@@ -78,7 +78,7 @@ class ScriptTest extends TestCase
 
         $script = (new LarapokeDirective(
             $this->mockConfig, $this->mockView, $this->mockUrl)
-        )->getRenderedScript();
+        )->toHtml();
 
         $this->assertEquals(
             'http://test-app.com/test-larapoke-route',

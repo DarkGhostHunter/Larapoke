@@ -12,10 +12,11 @@ trait InjectsLarapokeScript
      * Determines if the response can be injected with Larapoke script.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Http\Response | \Illuminate\Http\JsonResponse  $response
+     * @param  \Illuminate\Http\Response  $response
+     *
      * @return bool
      */
-    protected function isInjectable(Request $request, $response): bool
+    protected function isInjectable(Request $request, Response $response): bool
     {
         return $response->isSuccessful()
             && $this->isNormalResponse($response)
@@ -26,10 +27,11 @@ trait InjectsLarapokeScript
     /**
      * Detect if the Response is normal.
      *
-     * @param  \Illuminate\Http\Response | \Illuminate\Http\JsonResponse  $response
+     * @param  \Illuminate\Http\Response  $response
+     *
      * @return bool
      */
-    protected function isNormalResponse($response)
+    protected function isNormalResponse(Response $response): bool
     {
         return $response instanceof Response;
     }
@@ -40,7 +42,7 @@ trait InjectsLarapokeScript
      * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
-    protected function wantsFullHtml(Request $request)
+    protected function wantsFullHtml(Request $request): bool
     {
         return $request->acceptsHtml() && ! $request->ajax() && ! $request->pjax();
     }
@@ -51,7 +53,7 @@ trait InjectsLarapokeScript
      * @param  \Illuminate\Http\Response  $response
      * @return bool
      */
-    protected function hasCsrf(Response $response)
+    protected function hasCsrf(Response $response): bool
     {
         $content = $response->content();
 
@@ -64,7 +66,7 @@ trait InjectsLarapokeScript
      * @param  \Illuminate\Http\Response  $response
      * @return \Illuminate\Http\Response
      */
-    protected function injectScript($response)
+    protected function injectScript($response): Response
     {
         // To inject the script automatically, we will do it before the ending
         // body tag. If it's not found, the response may not be valid HTML,
@@ -74,9 +76,7 @@ trait InjectsLarapokeScript
         }
 
         return $response->setContent(
-            substr_replace(
-                $content, app(LarapokeDirective::class)->getRenderedScript(), $endBodyPosition, 0
-            )
+            substr_replace($content, app(LarapokeDirective::class)->toHtml(), $endBodyPosition, 0)
         );
     }
 }

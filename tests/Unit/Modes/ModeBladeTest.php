@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Modes;
 
-use Tests\ScaffoldAuth;
-use Tests\RegistersPackages;
 use Illuminate\Http\Response;
 use Orchestra\Testbench\TestCase;
+use Tests\RegistersPackages;
+use Tests\ScaffoldAuth;
 
 class ModeBladeTest extends TestCase
 {
@@ -166,19 +166,8 @@ class ModeBladeTest extends TestCase
         $this->assertStringContainsString('start-larapoke-script', $response->content());
         $this->assertStringContainsString('end-larapoke-script', $response->content());
 
-        $this->assertTrue(substr_count($response->content(), 'start-larapoke-script') === 1);
-        $this->assertTrue(substr_count($response->content(), 'end-larapoke-script') === 1);
-    }
-
-    public function testInjectsOnceOnMiddlewareAndMultipleForms()
-    {
-        $response = $this->get('/multiple-form-with-middleware');
-
-        $this->assertStringContainsString('start-larapoke-script', $response->content());
-        $this->assertStringContainsString('end-larapoke-script', $response->content());
-
-        $this->assertTrue(substr_count($response->content(), 'start-larapoke-script') === 1);
-        $this->assertTrue(substr_count($response->content(), 'end-larapoke-script') === 1);
+        $this->assertEquals(2, substr_count($response->content(), 'start-larapoke-script'));
+        $this->assertEquals(2, substr_count($response->content(), 'end-larapoke-script'));
     }
 
 }

@@ -8,8 +8,8 @@ Keep your forms alive, avoid `TokenMismatchException` by gently poking your Lara
 
 ## Requirements
 
-* PHP 7.4, 8.0 or later
-* Laravel 8.35 (April 2021)
+* PHP 7.4, 8.0 or later.
+* Laravel 7.x, 8.x or later.
 
 > For older versions support, consider helping by sponsoring or donating.
 
@@ -23,7 +23,7 @@ composer require darkghosthunter/larapoke
 
 ## How does it work?
 
-Larapoke pokes your App with a HTTP HEAD request to the `/poke` route at given intervals. In return, while your application renews the session lifetime, it sends an `HTTP 204` status code, which is an OK Response without body. 
+Larapoke pokes your App with an HTTP `HEAD` request to the `/poke` route at given intervals. In return, while your application renews the session lifetime, it sends an `HTTP 204` status code, which is an OK Response without body. 
 
 This amounts to **barely 800 bytes sent!**
 

@@ -3,6 +3,7 @@
 namespace DarkGhostHunter\Larapoke\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 
 class LarapokeGlobalMiddleware
 {
@@ -19,7 +20,7 @@ class LarapokeGlobalMiddleware
     {
         $response = $next($request);
 
-        if ($this->isInjectable($request, $response)) {
+        if ($request instanceof Request && $this->isInjectable($request, $response)) {
             $this->injectScript($response);
         }
 

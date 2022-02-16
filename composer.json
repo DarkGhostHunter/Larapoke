@@ -10,7 +10,7 @@
             "email": "darkghosthunter@gmail.com"
         }
     ],
-    "abandon": "laragear/poke",
+    "abandoned": "laragear/poke",
     "require": {
         "php": ">=7.4",
         "illuminate/http": "^7.0||^8.0",
